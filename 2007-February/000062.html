@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2007-February/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20About%20USB4RT%20for%20Xenomai%202.3%20and%20about%20progress%0A%20on%09faulty%20bulk%20read/write%20operation&In-Reply-To=%3C45E32240.9040303%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000061.html">
+   <LINK REL="Next"  HREF="000063.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20About%20USB4RT%20for%20Xenomai%202.3%20and%20about%20progress%0A%20on%09faulty%20bulk%20read/write%20operation&In-Reply-To=%3C45E32240.9040303%40web.de%3E"
+       TITLE="[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation">jan.kiszka at web.de
+       </A><BR>
+    <I>Mon Feb 26 19:09:04 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000061.html">[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation
+</A></li>
+        <LI>Next message: <A HREF="000063.html">[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress	on faulty bulk read/write operation
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#62">[ date ]</a>
+              <a href="thread.html#62">[ thread ]</a>
+              <a href="subject.html#62">[ subject ]</a>
+              <a href="author.html#62">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Jerome Pasquero wrote:
+&gt;<i> Hi Jan,
+</I>&gt;<i> 
+</I>&gt;<i> After putting on the side for a few weeks my project that makes use of
+</I>&gt;<i> usb4rt,  I am now coming back to it. Right before putting everything on the
+</I>&gt;<i> back burner, I was trying to figure out 2 recurrent problems with usb4rt
+</I>&gt;<i> under bulk transfer. One had to do with a weird restriction on the URB size
+</I>&gt;<i> and the other one with a faulty read operation. These problems were somehow
+</I>&gt;<i> - i.e. to the best of my capabilities - reported on this mailing list in
+</I>&gt;<i> September 2006.  Unfortunately, I never succeeded in finding what was
+</I>&gt;<i> wrong,
+</I>&gt;<i> even with all your helpful comments.
+</I>&gt;<i> 
+</I>&gt;<i> In your September 21st 2006 post, you mentioned that there was a student
+</I>&gt;<i> who
+</I>&gt;<i> was working on a serial adapter driver. I was wondering if there was any
+</I>&gt;<i> progress on your side? Either from him or from you. Especially with respect
+</I>&gt;<i> to the two problems mentioned above.
+</I>
+Due to time constraints of his work, he was not able to dig deeper into
+that issue, only to confirm it.
+
+&gt;<i> 
+</I>&gt;<i> I realize that usb4rt is not a high priority project and that you have
+</I>&gt;<i> limited resources, but I was wondering if there are any plans in the near
+</I>&gt;<i> future to try to fix these problems.
+</I>
+No concrete plans. We would love to have usb4rt working completely, but
+the pain not having it is still not heavy enough to shift priorities.
+
+&gt;<i> 
+</I>&gt;<i> For now, there is a small change that I suggest making to the usb4rt trunk.
+</I>&gt;<i> Xenomai's latest version,  2.3,  is not supported by usb4rt. Actually, I
+</I>&gt;<i> suspect that it's only the build system of usb4rt that lacks the detection
+</I>&gt;<i> of Xenomai 2.3 since there doesn't seem to be huge difference between
+</I>&gt;<i> Xenomai 2.2 and 2.3. Am I right? If it's the case, could the usb4rt
+</I>&gt;<i> trunk be
+</I>&gt;<i> updated accordingly? Thanks
+</I>
+Build fix just applied, compiles fine against both 2.3 and trunk here. I
+also added more archs to configure - before this becomes the next barrier.
+
+Sorry, right now this is all I can do for you - without having to start
+diving deeeeep into USB low-level programming on my own. :(
+
+How far did your examinations take you? I once thought about trying qemu
+with its USB emulation. Xenomai runs fine there (except /wrt temporal
+determinism, of course), and we use it heavily for development. May this
+would allow to attach a debugger and/or to snoop the USB traffic via the
+host USB layer that qemu must use. Just another idea...
+
+Jan
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 250 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20070226/9d94b7a8/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20070226/9d94b7a8/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000061.html">[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation
+</A></li>
+	<LI>Next message: <A HREF="000063.html">[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress	on faulty bulk read/write operation
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#62">[ date ]</a>
+              <a href="thread.html#62">[ thread ]</a>
+              <a href="subject.html#62">[ subject ]</a>
+              <a href="author.html#62">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

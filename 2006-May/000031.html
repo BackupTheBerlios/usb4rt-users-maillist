@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] bulk read, more than 131048 bytes
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20bulk%20read%2C%20more%20than%20131048%20bytes&In-Reply-To=%3C20060522121652.26781.qmail%40web32710.mail.mud.yahoo.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000030.html">
+   <LINK REL="Next"  HREF="000032.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] bulk read, more than 131048 bytes</H1>
+    <B>Cedric Herreman</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20bulk%20read%2C%20more%20than%20131048%20bytes&In-Reply-To=%3C20060522121652.26781.qmail%40web32710.mail.mud.yahoo.com%3E"
+       TITLE="[Usb4rt-users] bulk read, more than 131048 bytes">glocker50 at yahoo.com
+       </A><BR>
+    <I>Mon May 22 14:16:52 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000030.html">[Usb4rt-users] bulk read, more than 131048 bytes
+</A></li>
+        <LI>Next message: <A HREF="000032.html">[Usb4rt-users] bulk read, more than 131048 bytes
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#31">[ date ]</a>
+              <a href="thread.html#31">[ thread ]</a>
+              <a href="subject.html#31">[ subject ]</a>
+              <a href="author.html#31">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hello,
+ 
+ I am reading out camera frames with the usb4rt drivers. The camera has 320 x 256 pixels and 2 bytes of data per pixel. If i read out smaller regions of the image, i have no problems. But when i try to read out the complete image : 320 x 256 x 2 = 163 840 bytes, i get an error when i try to allocate (kmalloc) a buffer that big. The limit seems to be 131048 (man-page kmalloc).
+ 
+ Is there a workaround for this ?
+ 
+ Thx.
+ 
+ Cedric.
+ 
+		
+---------------------------------
+Talk is cheap. Use Yahoo! Messenger to make PC-to-Phone calls.  Great rates starting at 1&cent;/min.
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060522/6bf3ff0a/attachment.html">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060522/6bf3ff0a/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000030.html">[Usb4rt-users] bulk read, more than 131048 bytes
+</A></li>
+	<LI>Next message: <A HREF="000032.html">[Usb4rt-users] bulk read, more than 131048 bytes
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#31">[ date ]</a>
+              <a href="thread.html#31">[ thread ]</a>
+              <a href="subject.html#31">[ subject ]</a>
+              <a href="author.html#31">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

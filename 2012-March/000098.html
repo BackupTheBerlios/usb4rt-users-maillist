@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] usb4rt support for USB 2.0 ?
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2012-March/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20support%20for%20USB%202.0%20%3F&In-Reply-To=%3CCAOmRMTc5TKy5ODGeAP3ZSGUH%3Diiavr3KG5eC4HyP0NftnD6XNA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000099.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] usb4rt support for USB 2.0 ?</H1>
+    <B>Peter Pastor</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20support%20for%20USB%202.0%20%3F&In-Reply-To=%3CCAOmRMTc5TKy5ODGeAP3ZSGUH%3Diiavr3KG5eC4HyP0NftnD6XNA%40mail.gmail.com%3E"
+       TITLE="[Usb4rt-users] usb4rt support for USB 2.0 ?">peter.pastor at gmail.com
+       </A><BR>
+    <I>Sat Mar  3 01:38:03 CET 2012</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000099.html">[Usb4rt-users] Fwd: usb4rt support for USB 2.0 ?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#98">[ date ]</a>
+              <a href="thread.html#98">[ thread ]</a>
+              <a href="subject.html#98">[ subject ]</a>
+              <a href="author.html#98">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hello,
+
+I am running linux 2.6.35.9 and xenomai 2.5.6. I am trying to use
+usb4rt and downloaded svn rev 67.
+I had some minor issues when compiling it and I had to disable
+CONFIG_MODVERSIONS.
+Anyway, I followed the instructions in the README and everything
+seemed to have worked out.
+
+ # rmmod uhci_hcd
+ # rmmod ehci_hcd
+ # insmod core/rt_usbcore.ko
+ # insmod host/rt_uhci_hcd.ko
+ # cat /proc/xenomai/irq
+IRQ         CPU0        CPU1        CPU2        CPU3
+ 16:           0           0        4000           0         rt_uhci
+ 17:           0           0           0           0         rt_uhci
+ 22:           0           0           0           0         rt_uhci
+ 23:           0           0           0           0         rt_uhci
+4361:           0           1           1           1         [IPI]
+4364:     1038581      825049      814658      452344         [timer]
+4365:           0           0           0           0         [critical sync]
+4418:           0           0           0           0         [virtual]
+
+However rt_usbping.ko does not find my usb device. After adding some
+debbuging output into rt_usbcore.c I figured that rt_usbcore only
+shows USB1.1 devices and after reading the specs of my usb device I
+figured it uses USB2.0.
+
+Long story short, are there any plans on extending usb4rt to usb2.0?
+On that note... what is the status of rt_ftdi_sio.ko. Is there a plan
+on continuing on the development? Unfortunately, I am fairly useless
+when it comes to these things, I don't have any background in
+programming drivers. Are there any alternatives to usb4rt when using
+xenomai ?
+
+THANKS for any help,
+ peter
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000099.html">[Usb4rt-users] Fwd: usb4rt support for USB 2.0 ?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#98">[ date ]</a>
+              <a href="thread.html#98">[ thread ]</a>
+              <a href="subject.html#98">[ subject ]</a>
+              <a href="author.html#98">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

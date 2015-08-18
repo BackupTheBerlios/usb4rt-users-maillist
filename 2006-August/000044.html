@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB configuration with alternate interface
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%20configuration%20with%20alternate%20interface&In-Reply-To=%3C20060821155833.84210.qmail%40web32712.mail.mud.yahoo.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000043.html">
+   <LINK REL="Next"  HREF="000045.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB configuration with alternate interface</H1>
+    <B>Cedric Herreman</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%20configuration%20with%20alternate%20interface&In-Reply-To=%3C20060821155833.84210.qmail%40web32712.mail.mud.yahoo.com%3E"
+       TITLE="[Usb4rt-users] USB configuration with alternate interface">glocker50 at yahoo.com
+       </A><BR>
+    <I>Mon Aug 21 17:58:33 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000043.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+        <LI>Next message: <A HREF="000045.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>OK,
+
+I could fix it myself. (Isn't open source beautiful ?) I pasted the source code that i (slightly) modified below for information. It's to do with the 'alternate' variable. It holds whether an interface is alternate or not. If so, endpoints are discarded.
+
+/**
+ * Untersucht ein USB-Device auf Transferart, Packetsize, etc.
+ * @param p_usbdev Zeiger auf das zu untersuchende USB-Device
+ */
+void usb_check_device( struct usb_device *p_usbdev )
+{
+  struct usb_interface_descriptor *p_ifd;
+  struct usb_endpoint_descriptor  *p_epd;
+  struct usb_descriptor_header    *p_head;
+  struct usb_config_descriptor    *p_desc;
+/*
+  hid_descriptor_t                *p_hid;
+*/
+
+  int bytes;
+  int alternate;
+  void *buffer;
+  __u16 epa;
+  __u8 out;
+
+  if(!p_usbdev || !p_usbdev-&gt;p_hcd){
+    return;
+  }
+
+  p_desc = p_usbdev-&gt;p_cfg_desc;
+  if(!p_desc){
+    ERR_MSG2(p_usbdev-&gt;p_hcd,p_usbdev, &quot; No valid pointer to struct usb_config_descriptor !!!\n&quot;);
+    return;
+  }
+
+  alternate = 0;
+  bytes = p_desc-&gt;wTotalLength;
+  buffer = (void *)(p_desc);  /* first Interface */
+
+  while( bytes &gt; 0 ){
+    p_head = (struct usb_descriptor_header *)buffer;
+    switch(p_head-&gt;bDescriptorType ){
+
+      case USB_DT_CONFIG: {
+        p_desc = (struct usb_config_descriptor *)buffer;
+        buffer += p_desc-&gt;bLength;
+        bytes -= p_desc-&gt;bLength;
+        dump_configuration_descriptor(p_usbdev);
+        break;
+      }
+
+      case USB_DT_INTERFACE: {
+        p_ifd = (struct usb_interface_descriptor *)buffer;
+        buffer += p_ifd-&gt;bLength;
+        bytes -= p_ifd-&gt;bLength;
+    alternate = p_ifd-&gt;bAlternateSetting;
+        dump_interface_descriptor(p_usbdev,p_ifd);
+        break;
+      }
+
+      case USB_DT_ENDPOINT: {
+        p_epd = (struct usb_endpoint_descriptor *)buffer;
+        epa = p_epd-&gt;bEndpointAddress &amp; USB_ENDPOINT_NUMBER_MASK;
+        out = p_epd-&gt;bEndpointAddress &amp; USB_ENDPOINT_DIR_MASK ? 0 : 1 ;
+        buffer += p_epd-&gt;bLength;
+        bytes -= p_epd-&gt;bLength;
+        dump_endpoint_descriptor(p_usbdev,p_epd);
+    if (alternate) break;
+    
+        if(out){
+          p_usbdev-&gt;epmaxpacketout[epa] = le16_to_cpu(p_epd-&gt;wMaxPacketSize);
+        } else {
+          p_usbdev-&gt;epmaxpacketin[epa] = le16_to_cpu(p_epd-&gt;wMaxPacketSize);
+        }
+        switch( p_epd-&gt;bmAttributes &amp; USB_ENDPOINT_XFERTYPE_MASK ){
+          case USB_ENDPOINT_XFER_CONTROL:
+            DBG(&quot;USB-DEVICE[%d]: Ctrl-%s Endpoint found: 0x%02x (%d Byte)\n&quot;,p_usbdev,out ? &quot;OUT&quot;:&quot;IN&quot;,epa,p_epd-&gt;wMaxPacketSize);
+            if(out){
+              p_usbdev-&gt;ctrl_mask[1] |= (1 &lt;&lt; epa);
+            } else {
+              p_usbdev-&gt;ctrl_mask[0] |= (1 &lt;&lt; epa);
+            }
+            break;
+          case USB_ENDPOINT_XFER_BULK:
+            DBG(&quot;USB-DEVICE[%d]: Bulk-%s Endpoint found: 0x%02x (%d Byte)\n&quot;,p_usbdev,out ? &quot;OUT&quot;:&quot;IN&quot;,epa,p_epd-&gt;wMaxPacketSize);
+            if(out){
+              p_usbdev-&gt;bulk_mask[1] |= (1 &lt;&lt; epa);
+            } else {
+              p_usbdev-&gt;bulk_mask[0] |= (1 &lt;&lt; epa);
+            }
+            break;
+          case USB_ENDPOINT_XFER_INT:
+            DBG(&quot;USB-DEVICE[%d]: Interrupt-%s Endpoint found: 0x%02x (%d Byte)\n&quot;,p_usbdev,out ? &quot;OUT&quot;:&quot;IN&quot;,epa,p_epd-&gt;wMaxPacketSize);
+            if(out){
+              p_usbdev-&gt;int_mask[1] |= (1 &lt;&lt; epa);
+            } else {
+              p_usbdev-&gt;int_mask[0] |= (1 &lt;&lt; epa);
+            }
+            break;
+          case USB_ENDPOINT_XFER_ISOC:
+            DBG(&quot;USB-DEVICE[%d]: Iso-%s Endpoint found: 0x%02x (%d Byte)\n&quot;,p_usbdev,out ? &quot;OUT&quot;:&quot;IN&quot;,epa,p_epd-&gt;wMaxPacketSize);
+            if(out){
+              p_usbdev-&gt;iso_mask[1] |= (1 &lt;&lt; epa);
+            } else {
+              p_usbdev-&gt;iso_mask[0] |= (1 &lt;&lt; epa);
+            }
+            break;
+        }
+        break;
+      }
+
+/*
+      case USB_DT_HID: {
+        p_hid = (hid_descriptor_t *)buffer;
+        buffer += p_hid-&gt;bLength;
+        bytes -= p_hid-&gt;bLength;
+        //dump_hid_descriptor(addr,p_hid);
+        break;
+      }
+*/
+
+      default: {
+        buffer += p_head-&gt;bLength;
+        bytes -= p_head-&gt;bLength;
+      }
+    }
+  }
+
+  DBG_MSG2(p_usbdev-&gt;p_hcd,p_usbdev,&quot; Ctrl-Mask: IN: 0x%04x - OUT: 0x%04x\n&quot;,p_usbdev-&gt;ctrl_mask[0],p_usbdev-&gt;ctrl_mask[1]);
+  DBG_MSG2(p_usbdev-&gt;p_hcd,p_usbdev,&quot; Bulk-Mask: IN: 0x%04x - OUT: 0x%04x\n&quot;,p_usbdev-&gt;bulk_mask[0],p_usbdev-&gt;bulk_mask[1]);
+  DBG_MSG2(p_usbdev-&gt;p_hcd,p_usbdev,&quot; Int- Mask: IN: 0x%04x - OUT: 0x%04x\n&quot;,p_usbdev-&gt;int_mask[0],p_usbdev-&gt;int_mask[1]);
+  DBG_MSG2(p_usbdev-&gt;p_hcd,p_usbdev,&quot; Iso- Mask: IN: 0x%04x - OUT: 0x%04x\n&quot;,p_usbdev-&gt;iso_mask[0],p_usbdev-&gt;iso_mask[1]);
+  return;
+}
+
+Cedric.
+
+----- Original Message ----
+From: Jan Kiszka &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">jan.kiszka at web.de</A>&gt;
+To: usb4rt &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">usb4rt-users at lists.berlios.de</A>&gt;
+Sent: Monday, August 21, 2006 4:49:17 PM
+Subject: Re: [Usb4rt-users] USB configuration with alternate interface
+
+Cedric Herreman wrote:
+&gt;<i> Jan,
+</I>&gt;<i> 
+</I>&gt;<i> Yes, &quot;lsusb -v&quot; was used to print out the configuration. There is a driver  for this device (both linux and windows, but not rt).
+</I>&gt;<i> 
+</I>&gt;<i> The USB spec (1.1) allows a single interface to have alternate settings : 
+</I>&gt;<i> 
+</I>&gt;<i> paragraph 9.6.2 (configuration)
+</I>&gt;<i> &quot;A USB device has one or more configuration descriptors. Each configuration has one or more interfaces
+</I>&gt;<i> and each interface has zero or more endpoints. An endpoint is not shared among interfaces within a single
+</I>&gt;<i> configuration unless the endpoint is used by alternate settings of the same interface.&quot;
+</I>&gt;<i> 
+</I>&gt;<i> paragraph 9.6.3 (interface)
+</I>&gt;<i> &quot;An interface may include alternate settings that allow the endpoints and/or their characteristics to be varied
+</I>&gt;<i> after the device has been configured. The default setting for an interface is always alternate setting zero.
+</I>&gt;<i> The SetInterface() request is used to select an alternate setting or to return to the default setting. The
+</I>&gt;<i> GetInterface() request returns the selected alternate setting.
+</I>&gt;<i> Alternate settings allow a portion of the device configuration to be varied while other interfaces remain in
+</I>&gt;<i> operation. If a configuration has alternate settings for one or more of its interfaces, a separate interface
+</I>&gt;<i> descriptor and its associated endpoints are included for each setting.&quot;
+</I>&gt;<i> 
+</I>&gt;<i> I do not really need the possibility to switch to the alternate settings. Just have the driver to cope with the presence of an alternate setting, and to discard it.
+</I>&gt;<i> 
+</I>&gt;<i> This is a dump of the device. You can see there are two incoming communication types for endpoint 2. The maxpacket size is taken from the alternate setting (isochronous read), in stead of the standard one.
+</I>
+--&lt;snipped messed up table - please post plain text&gt;--
+
+This obviously is a bug in the core. I'm sorry, I can't help here
+(time...). Maybe you could try analysing what happens to the information
+and where things go wrong. There is the easy-to-setup-but-unhandy-to-use
+printk way or the more-complicated-to-setup-but-easy-to-use kgdb
+approach [1].
+
+Jan
+
+[1] <A HREF="http://download.gna.org/adeos/patches/v2.6/i386/kgdb/">http://download.gna.org/adeos/patches/v2.6/i386/kgdb/</A>
+
+
+_______________________________________________
+Usb4rt-users mailing list
+<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">Usb4rt-users at lists.berlios.de</A>
+<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">https://lists.berlios.de/mailman/listinfo/usb4rt-users</A>
+
+
+
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060821/109f40dc/attachment.html">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060821/109f40dc/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000043.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+	<LI>Next message: <A HREF="000045.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB4RT and PCI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB4RT%20and%20PCI&In-Reply-To=%3C436F7639.6060108%40rts.uni-hannover.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000016.html">
+   <LINK REL="Next"  HREF="000018.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB4RT and PCI</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB4RT%20and%20PCI&In-Reply-To=%3C436F7639.6060108%40rts.uni-hannover.de%3E"
+       TITLE="[Usb4rt-users] USB4RT and PCI">kiszka at rts.uni-hannover.de
+       </A><BR>
+    <I>Mon Nov  7 16:43:53 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000016.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+        <LI>Next message: <A HREF="000018.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#17">[ date ]</a>
+              <a href="thread.html#17">[ thread ]</a>
+              <a href="subject.html#17">[ subject ]</a>
+              <a href="author.html#17">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman wrote:
+&gt;<i> Thanks for the suggestion. This BIOS version does not
+</I>&gt;<i> allow me to disable the Ethernet ports on the board. I
+</I>&gt;<i> experimented with some settings but had no improvement
+</I>&gt;<i> for the moment.
+</I>&gt;<i> 
+</I>&gt;<i> I tried loading the user space drivers. This works,
+</I>&gt;<i> dmesg shows me the vendor ID and product ID of the
+</I>&gt;<i> only attached device. I do not have this Host System
+</I>&gt;<i> Error with the user space drivers. 
+</I>&gt;<i> 
+</I>&gt;<i> An IRQ conflict would give me problems in user space
+</I>&gt;<i> also, i suppose ?
+</I>&gt;<i> 
+</I>
+It will. But did you try to figure out if there is actually such a
+conflict? What does /proc/interrupts tell you when both Ethernet and USB
+is handled by normal Linux drivers?
+
+Jan
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 250 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20051107/bbea5692/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20051107/bbea5692/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000016.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+	<LI>Next message: <A HREF="000018.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#17">[ date ]</a>
+              <a href="thread.html#17">[ thread ]</a>
+              <a href="subject.html#17">[ subject ]</a>
+              <a href="author.html#17">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

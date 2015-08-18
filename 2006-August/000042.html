@@ -1,0 +1,200 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB configuration with alternate interface
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%20configuration%20with%20alternate%20interface&In-Reply-To=%3C20060821133437.45496.qmail%40web32702.mail.mud.yahoo.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000041.html">
+   <LINK REL="Next"  HREF="000043.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB configuration with alternate interface</H1>
+    <B>Cedric Herreman</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%20configuration%20with%20alternate%20interface&In-Reply-To=%3C20060821133437.45496.qmail%40web32702.mail.mud.yahoo.com%3E"
+       TITLE="[Usb4rt-users] USB configuration with alternate interface">glocker50 at yahoo.com
+       </A><BR>
+    <I>Mon Aug 21 15:34:37 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000041.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+        <LI>Next message: <A HREF="000043.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#42">[ date ]</a>
+              <a href="thread.html#42">[ thread ]</a>
+              <a href="subject.html#42">[ subject ]</a>
+              <a href="author.html#42">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Jan,
+
+Yes, &quot;lsusb -v&quot; was used to print out the configuration. There is a driver  for this device (both linux and windows, but not rt).
+
+The USB spec (1.1) allows a single interface to have alternate settings : 
+
+paragraph 9.6.2 (configuration)
+&quot;A USB device has one or more configuration descriptors. Each configuration has one or more interfaces
+and each interface has zero or more endpoints. An endpoint is not shared among interfaces within a single
+configuration unless the endpoint is used by alternate settings of the same interface.&quot;
+
+paragraph 9.6.3 (interface)
+&quot;An interface may include alternate settings that allow the endpoints and/or their characteristics to be varied
+after the device has been configured. The default setting for an interface is always alternate setting zero.
+The SetInterface() request is used to select an alternate setting or to return to the default setting. The
+GetInterface() request returns the selected alternate setting.
+Alternate settings allow a portion of the device configuration to be varied while other interfaces remain in
+operation. If a configuration has alternate settings for one or more of its interfaces, a separate interface
+descriptor and its associated endpoints are included for each setting.&quot;
+
+I do not really need the possibility to switch to the alternate settings. Just have the driver to cope with the presence of an alternate setting, and to discard it.
+
+This is a dump of the device. You can see there are two incoming communication types for endpoint 2. The maxpacket size is taken from the alternate setting (isochronous read), in stead of the standard one.
+      --- DUMP USB-DEVICE @ ce90be60 -------------------------  Number          : 1      Vendor          : 0x0547  Product         : 0x1002  Root-Hub-Port   : 0x00  Class           : 0xff  Subclass        : 0x00  Protocol        : 0x00  In use          : no      Status          : 0x00  Speed           : 0x02  Host-Controller @ 0xcd567c00      Endpoint         ---0 ---1 ---2 ---3 ---4 ---5 ---6 ---7 ---8 ---9 --10 --11 --12 --13 --14 --15   Ctrl-Mask IN        X    -    -    -    -    -    -    -    -    -    -    -    -    -    -    -  Ctrl-Mask OUT       X    -    -    -    -    -    -    -    -    -    -    -    -    -    -    -  Bulk-Mask IN        -    -    X    -    -    -    -    -    -    -    -    -    -    -    -    -  Bulk-Mask OUT       -    -    -    -    -    -    -    -    -    -    -    -    -    -    -    -  Int-Mask IN         -    -    -    -    -    -    -    -    -    -    -    -    -    -    -    -  Int-Mask OUT        -    -    -    -    -    -    -   
+ -    -    -    -    -    -    -    -    -  Iso-Mask IN         -    -    X    -    -    -    -    -    -    -    -    -    -    -    -    -  Iso-Mask OUT        -    -    -    -    -    -    -    -    -    -    -    -    -    -    -    -  Toggle-Mask IN      -    -    -    -    -    -    -    -    -    -    -    -    -    -    -    -  Toggle-Mask OUT     -    -    -    -    -    -    -    -    -    -    -    -    -    -    -    -  Max-Packet IN    0064 0000 1023 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000  Max-Packet OUT   0064 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 --- END USB-DEVICE -------------------------- Rgds,
+
+Cedric.
+
+----- Original Message ----
+From: Jan Kiszka &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">jan.kiszka at web.de</A>&gt;
+To: Cedric Herreman &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">glocker50 at yahoo.com</A>&gt;
+Cc: <A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">usb4rt-users-bounces at lists.berlios.de</A>
+Sent: Monday, August 21, 2006 1:30:23 PM
+Subject: Re: [Usb4rt-users] USB configuration with alternate interface
+
+Cedric Herreman wrote:
+&gt;<i> Hello,
+</I>&gt;<i> 
+</I>&gt;<i> I am trying to use the usb4rt drivers on a device that has an USB configuration with two interfaces (standard and alternate interface). Unfortunately enough, in the two interfaces the same endpoint 0x82 is used for different types of communication : bulk read and isochronous read.
+</I>&gt;<i> 
+</I>&gt;<i> This seems to cause problems in the driver :
+</I>&gt;<i> - rt4usb selects interface 0 by default (bulk read)
+</I>&gt;<i> - but reads interface 1 to configure endpoint 0x82 (isochronous read)
+</I>&gt;<i> 
+</I>&gt;<i> Can anyone give a hint on how to work around this ? See the USB configuration of the device below. Thanks for the help.
+</I>&gt;<i> 
+</I>&gt;<i> Cedric.
+</I>&gt;<i> 
+</I>&gt;<i> Bus 005 Device 004: ID 0547:1002 Anchor Chips, Inc. 
+</I>&gt;<i> Device Descriptor:
+</I>&gt;<i>   bLength                18
+</I>&gt;<i>   bDescriptorType         1
+</I>&gt;<i>   bcdUSB               2.00
+</I>&gt;<i>   bDeviceClass            0 (Defined at Interface level)
+</I>&gt;<i>   bDeviceSubClass         0 
+</I>&gt;<i>   bDeviceProtocol         0 
+</I>&gt;<i>   bMaxPacketSize0        64
+</I>&gt;<i>   idVendor           0x0547 Anchor Chips, Inc.
+</I>&gt;<i>   idProduct          0x1002 
+</I>&gt;<i>   bcdDevice            0.00
+</I>&gt;<i>   iManufacturer           1 
+</I>&gt;<i>   iProduct                2 
+</I>&gt;<i>   iSerial                 0 
+</I>&gt;<i>   bNumConfigurations      1
+</I>&gt;<i>   Configuration Descriptor:
+</I>&gt;<i>     bLength                 9
+</I>&gt;<i>     bDescriptorType         2
+</I>&gt;<i>     wTotalLength           41
+</I>&gt;<i>     bNumInterfaces          1
+</I>&gt;<i>     bConfigurationValue     1
+</I>&gt;<i>     iConfiguration          0 
+</I>&gt;<i>     bmAttributes         0xa0
+</I>&gt;<i>       Remote Wakeup
+</I>&gt;<i>     MaxPower              500mA
+</I>&gt;<i>     Interface Descriptor:
+</I>&gt;<i>       bLength                 9
+</I>&gt;<i>       bDescriptorType         4
+</I>&gt;<i>       bInterfaceNumber        0
+</I>&gt;<i>       bAlternateSetting       0
+</I>&gt;<i>       bNumEndpoints           1
+</I>&gt;<i>       bInterfaceClass       255 Vendor Specific Class
+</I>&gt;<i>       bInterfaceSubClass      0 
+</I>&gt;<i>       bInterfaceProtocol      0 
+</I>&gt;<i>       iInterface              0 
+</I>&gt;<i>       Endpoint Descriptor:
+</I>&gt;<i>         bLength                 7
+</I>&gt;<i>         bDescriptorType         5
+</I>&gt;<i>         bEndpointAddress     0x82  EP 2 IN
+</I>&gt;<i>         bmAttributes            2
+</I>&gt;<i>           Transfer Type            Bulk
+</I>&gt;<i>           Synch Type               None
+</I>&gt;<i>           Usage Type               Data
+</I>&gt;<i>         wMaxPacketSize     0x0200  1x 512 bytes
+</I>&gt;<i>         bInterval               0
+</I>&gt;<i>     Interface Descriptor:
+</I>&gt;<i>       bLength                 9
+</I>&gt;<i>       bDescriptorType         4
+</I>&gt;<i>       bInterfaceNumber        0
+</I>&gt;<i>       bAlternateSetting       1
+</I>&gt;<i>       bNumEndpoints           1
+</I>&gt;<i>       bInterfaceClass       255 Vendor Specific Class
+</I>&gt;<i>       bInterfaceSubClass      0 
+</I>&gt;<i>       bInterfaceProtocol      0 
+</I>&gt;<i>       iInterface              0 
+</I>&gt;<i>       Endpoint Descriptor:
+</I>&gt;<i>         bLength                 7
+</I>&gt;<i>         bDescriptorType         5
+</I>&gt;<i>         bEndpointAddress     0x82  EP 2 IN
+</I>&gt;<i>         bmAttributes            1
+</I>&gt;<i>           Transfer Type            Isochronous
+</I>&gt;<i>           Synch Type               None
+</I>&gt;<i>           Usage Type               Data
+</I>&gt;<i>         wMaxPacketSize     0x0400  1x 0 bytes
+</I>&gt;<i>         bInterval               1
+</I>&gt;<i> Device Qualifier (for other device speed):
+</I>&gt;<i>   bLength                10
+</I>&gt;<i>   bDescriptorType         6
+</I>&gt;<i>   bcdUSB               2.00
+</I>&gt;<i>   bDeviceClass            0 (Defined at Interface level)
+</I>&gt;<i>   bDeviceSubClass         0 
+</I>&gt;<i>   bDeviceProtocol         0 
+</I>&gt;<i>   bMaxPacketSize0        64
+</I>&gt;<i>   bNumConfigurations      1
+</I>&gt;<i> 
+</I>
+Is this lsusb -v before usb4rt ran? Looks fishy to me, e.g. that there
+are two interfaces while bNumInterfaces is 1 or that wMaxPacketSize of
+interface is detected as 0 bytes.
+
+Is there is Linux driver for this device that works fine?
+
+Jan
+
+
+
+
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060821/c8d328db/attachment.html">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060821/c8d328db/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000041.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+	<LI>Next message: <A HREF="000043.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#42">[ date ]</a>
+              <a href="thread.html#42">[ thread ]</a>
+              <a href="subject.html#42">[ subject ]</a>
+              <a href="author.html#42">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

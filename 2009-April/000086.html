@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] problem in installation of RTAI/fusion for usb4rt
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2009-April/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20problem%20in%20installation%20of%20RTAI/fusion%20for%20usb4rt&In-Reply-To=%3C49DC46B9.1040302%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000085.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] problem in installation of RTAI/fusion for usb4rt</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20problem%20in%20installation%20of%20RTAI/fusion%20for%20usb4rt&In-Reply-To=%3C49DC46B9.1040302%40web.de%3E"
+       TITLE="[Usb4rt-users] problem in installation of RTAI/fusion for usb4rt">jan.kiszka at web.de
+       </A><BR>
+    <I>Wed Apr  8 08:39:53 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000085.html">[Usb4rt-users] problem in installation of RTAI/fusion for usb4rt
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#86">[ date ]</a>
+              <a href="thread.html#86">[ thread ]</a>
+              <a href="subject.html#86">[ subject ]</a>
+              <a href="author.html#86">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Venkatesh Rao wrote:
+&gt;<i> We are working on RTAI and now we wish to use USB in RTAI.
+</I>&gt;<i> 
+</I>&gt;<i> We came across this usb4rt while searching on using usb in RTAI. However
+</I>&gt;<i> installation of RTAI package needs the installation of RTAI/fusion.
+</I>&gt;<i> 
+</I>&gt;<i> But we are not able to find any working link to the installation of
+</I>&gt;<i> fusion/RTAI.
+</I>
+USB4RT builds against Xenomai ATM. But as it is based on RTDM, it should
+be compilable against RTAI, too - with some makefile&amp;configure massaging.
+
+&gt;<i> 
+</I>&gt;<i> We wanted to know if usb4rt is in developing stages or  is it developed and
+</I>&gt;<i> can be used for the project.
+</I>
+The state hasn't changed since this was last discussed here, please see
+the mailing list archive.
+
+&gt;<i> Also is there any substitute for RTAI/fusion.
+</I>&gt;<i> Can xenomai work in place of it? Also is there any other substitute for
+</I>&gt;<i> usb4rt? we came across usb20rt.What is it?
+</I>
+usb20rt comes with USB 2.0 support (in contrast to USB4RT, which only
+supports USB 1.1 so far), but has a more &quot;pragmatic&quot; design /wrt RT.
+Early versions even broke RT, but I'm not up-to-date with its current state.
+
+&gt;<i> 
+</I>&gt;<i> Also there is very less documentation available on usb4rt. Can we have some
+</I>&gt;<i> links for it?
+</I>&gt;<i> 
+</I>
+RTFS :) - sorry, no further docs, specifically not in English.
+
+Jan
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 257 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20090408/8cc7a4ff/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20090408/8cc7a4ff/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000085.html">[Usb4rt-users] problem in installation of RTAI/fusion for usb4rt
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#86">[ date ]</a>
+              <a href="thread.html#86">[ thread ]</a>
+              <a href="subject.html#86">[ subject ]</a>
+              <a href="author.html#86">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

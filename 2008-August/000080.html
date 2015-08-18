@@ -1,0 +1,256 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] Problem with BULK URB
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2008-August/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Problem%20with%20BULK%20URB&In-Reply-To=%3C48983C38.6010003%40free.fr%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000081.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] Problem with BULK URB</H1>
+    <B>Antoine Nourry</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Problem%20with%20BULK%20URB&In-Reply-To=%3C48983C38.6010003%40free.fr%3E"
+       TITLE="[Usb4rt-users] Problem with BULK URB">nourry at free.fr
+       </A><BR>
+    <I>Tue Aug  5 13:40:40 CEST 2008</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000081.html">[Usb4rt-users] Problem with BULK URB
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#80">[ date ]</a>
+              <a href="thread.html#80">[ thread ]</a>
+              <a href="subject.html#80">[ subject ]</a>
+              <a href="author.html#80">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi,
+I have a problem with my program (from rt_usb_ping and previous 
+discussion on September 2006).
+
+It seems that bulk out urb works, since i do not have &quot;RT_SEM timed out&quot; 
+and number of sent bytes written is correct. I work with a USB DAQ 
+module and its command LED lights when i send this bulk out urb.
+
+# 
+-------------------------------------------------------------------------------------------
+# --------------------------------------------OUT BULK URB
+
+[  979.124323] RT-USBCORE: Driver is searching for Device with Vendor = 
+0x0cd5, Product = 0x0009
+[  979.125096] --- LIST USB-DEVICES -------------------------
+[  979.125998]  No HCD VENDOR   PROD  CLS SCLS PROT -&gt;CTRL CTRL-&gt; -&gt;BULK 
+BULK-&gt;  -&gt;INT  INT-&gt; -&gt;ISOC ISOC-&gt; STATE SPEED USED
+[  979.126390] 001 000 0x0cd5 0x0009 0xff 0xff 0xff 0x0001 0x0001 0x0006 
+0x0006 0x0000 0x0000 0x0000 0x0000 00000 00002    X
+[  979.128101] --- END USB-DEVICES --------------------------
+[  979.128337] RT-USBCORE: USB-Device[1] LOCKED
+[  979.128509] RT-USB-PING: vendor = 0x0cd5, product = 0x0009 found ...
+[  979.128739] RT-USB-PING: USB-Device @ 0xc8c223e0
+[  979.128919] RT-USB-PING: Host-Controller @ 0xc7c55760
+[  979.129110] -------------- OUT URB --------------
+[  979.129390] 000: URB @ 0xc74cc860 registered, 18 TDs, Max-Buffer: 
+256, Max-Packet-Size: 16
+[  979.129861] BASE_RT: Send-Time URB[ 0] (Semaphore): 0
+[  979.129870] URB Type: BULK, Address: 1, Pipe: OUT, Endpoint 1
+[  979.129876] 000:00-001: URB 0xc74cc860: Max Packet-Size 16
+[  979.129881] 000:00-001: URB 0xc74cc860: Max Transfer-Buffer-Length 256
+[  979.129887] 000:00-001: URB 0xc74cc860: Transfer-Buffer-Length 38
+[  979.129892] 000:00-001: URB 0xc74cc860: Transfer-Buffer 0xc6476c20, 
+NOT_DMA_MAPPED
+[  979.129898] 000:00-001: URB 0xc74cc860: Blocking URB (Semaphore)
+[  979.129905] 000:00-001: URB 0xc74cc860: Transfer-Buffer @ 0xc6476c20 
+(38 Byte) mapped to DMA: 0x06476c20 [OUT]
+[  979.129912] 000:00-001: URB 0xc74cc860: SLEEPING MAX 500000000 ns
+[  979.129917] 000:00-001: URB 0xc74cc860: PURB_IN_PROGRESS
+[  979.129922] Sending 38 Bytes: [0]: 0x3d, [1]: 0x78
+[  979.129927] ========== DUMP TD-TABLE @ 0xc4ec7000 (18 TDs, 864 Byte) 
+===========
+[  979.129933]    URB         @ 0xc74cc860
+[  979.129937]    PRIVATE-URB @ 0xc1f863c0
+[  979.129942]    QH          @ 0xc2397000 , DMA: 0x02397000
+[  979.129948] A    NR         TD        LINK      STATUS       
+TOKEN      BUFFER  ACT ACTLEN MAXLEN TYPE ERRCNT STALL DBUF BABL TIME 
+BITST SPD IOC NAK DT ADR EP LS
+[  979.129958] *     0 0x04ec7000  0x04ec7034  0x00800000  0x01e081e1  
+0x06476c20    X      0     15   e1      0     -    -    -    -     -   
+-   -   -  0   1  1  -
+[  979.129969] *     1 0x04ec7030  0x04ec7064  0x00800000  0x01e881e1  
+0x06476c30    X      0     15   e1      0     -    -    -    -     -   
+-   -   -  1   1  1  -
+[  979.129979] *     2 0x04ec7060  0x00000001  0x01800000  0x00a081e1  
+0x06476c40    X      0      5   e1      0     -    -    -    -     -   
+-   X   -  0   1  1  -
+[  979.129987] ========== END DUMP =========
+[  979.129992] 000:00-001: URB 0xc74cc860: Add to QH-List
+[  979.129997] 000:00-001: URB 0xc74cc860: ---SCHEDULE in 
+Full-Speed-List ---
+[  979.138696] RT-USB-PING: started, 190 Byte allocated
+[  979.903966] 000:00-001: URB 0xc74cc860: RT_SEM timed out
+[  979.903984] 000:00-001: URB 0xc74cc860: PURB_IN_HANDLE
+[  979.903990] 000:00-001: URB 0xc74cc860: ---UNSCHEDULE from 
+Full-Speed-List ---
+[  979.903996] 000:00-001: URB 0xc74cc860: Remove from QH-List
+[  979.904001] 000:00-001: URB 0xc74cc860: 38 / 38 Byte sent
+[  979.904007] 000:00-001: URB 0xc74cc860: Unmap Transfer-Buffer @ 
+0xc6476c20 (38 Byte) from DMA: 0x06476c20
+[  979.904013] 000:00-001: URB 0xc74cc860: Free TDs
+[  979.904018] 000:00-001: URB 0xc74cc860: PURB_IDLE
+[  979.904023] RT-USB-PING: End-Time  URB[ 0] (Semaphore): 
+1217940643400728168
+[  982.291437] -----------&gt; deleting urb...
+[  982.292222] 000: URB 0xc74cc860 unregistered
+[  982.292555] BASE-RT: URB base deleted
+[  982.292859] RT-USBCORE: Driver releases USB-Device[1]
+[  982.293204] --- LIST USB-DEVICES -------------------------
+[  982.293557]  No HCD VENDOR   PROD  CLS SCLS PROT -&gt;CTRL CTRL-&gt; -&gt;BULK 
+BULK-&gt;  -&gt;INT  INT-&gt; -&gt;ISOC ISOC-&gt; STATE SPEED USED
+[  982.294080] 001 000 0x0cd5 0x0009 0xff 0xff 0xff 0x0001 0x0001 0x0006 
+0x0006 0x0000 0x0000 0x0000 0x0000 00000 00002    -
+[  982.294614] --- END USB-DEVICES --------------------------
+[  982.295033] RT-USB-PING: STOPPED, 0 Byte allocated
+
+On the other hand, i have the problems mentioned above with bulk in urb, 
+problem with semaphore ?
+
+# 
+-------------------------------------------------------------------------------------------
+# --------------------------------------------IN BULK URB
+
+
+[  496.878812]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[  496.878819] UHC @ 0xc8c0f320: Checking for Interrupts
+[  496.878824] UHC[0]: No state-bit set
+[  496.878828]  =================== ENDE RTAI-INTERRUPT HANDLER 
+=======================
+[  772.736576] RT-USBCORE: Driver is searching for Device with Vendor = 
+0x0cd5, Product = 0x0009
+[  772.737454] --- LIST USB-DEVICES -------------------------
+[  772.737821]  No HCD VENDOR   PROD  CLS SCLS PROT -&gt;CTRL CTRL-&gt; -&gt;BULK 
+BULK-&gt;  -&gt;INT  INT-&gt; -&gt;ISOC ISOC-&gt; STATE SPEED USED
+[  772.738348] 001 000 0x0cd5 0x0009 0xff 0xff 0xff 0x0001 0x0001 0x0006 
+0x0006 0x0000 0x0000 0x0000 0x0000 00000 00002    X
+[  772.738884] --- END USB-DEVICES --------------------------
+[  772.739502] RT-USBCORE: USB-Device[1] LOCKED
+[  772.739827] RT-USB-PING: vendor = 0x0cd5, product = 0x0009 found ...
+[  772.740208] RT-USB-PING: USB-Device @ 0xc8c223e0
+[  772.740539] RT-USB-PING: Host-Controller @ 0xc7c55760
+[  772.740881] -------------- IN BUFF --------------
+[  772.741246] 000: URB @ 0xc74cc560 registered, 18 TDs, Max-Buffer: 
+256, Max-Packet-Size: 16
+[  772.741835] BASE_RT: Send-Time URB[ 0] (Semaphore): 0
+[  772.741843] URB Type: BULK, Address: 1, Pipe: IN, Endpoint 1
+[  772.741849] 000:00-001: URB 0xc74cc560: Max Packet-Size 16
+[  772.741854] 000:00-001: URB 0xc74cc560: Max Transfer-Buffer-Length 256
+[  772.741860] 000:00-001: URB 0xc74cc560: Transfer-Buffer-Length 38
+[  772.741866] 000:00-001: URB 0xc74cc560: Transfer-Buffer 0xc54f3b20, 
+NOT_DMA_MAPPED
+[  772.741872] 000:00-001: URB 0xc74cc560: Blocking URB (Semaphore)
+[  772.741878] 000:00-001: URB 0xc74cc560: Transfer-Buffer @ 0xc54f3b20 
+(38 Byte) mapped to DMA: 0x054f3b20 [IN]
+[  772.741885] 000:00-001: URB 0xc74cc560: SLEEPING MAX 500000000 ns
+[  772.741890] 000:00-001: URB 0xc74cc560: PURB_IN_PROGRESS
+[  772.741895] 000:00-001: URB 0xc74cc560: Add to QH-List
+[  772.741900] 000:00-001: URB 0xc74cc560: ---SCHEDULE in 
+Full-Speed-List ---
+[  772.748107] RT-USB-PING: started, 190 Byte allocated
+[  773.515928] 000:00-001: URB 0xc74cc560: RT_SEM timed out
+[  773.515946] 000:00-001: URB 0xc74cc560: PURB_IN_HANDLE
+[  773.515951] 000:00-001: URB 0xc74cc560: ---UNSCHEDULE from 
+Full-Speed-List ---
+[  773.515957] 000:00-001: URB 0xc74cc560: Remove from QH-List
+[  773.515963] 000:00-001: URB 0xc74cc560: Short Packet (0/15 Bytes)
+[  773.515968] 000:00-001: URB 0xc74cc560: 1 / 38 Byte received
+[  773.515974] 000:00-001: URB 0xc74cc560: Unmap Transfer-Buffer @ 
+0xc54f3b20 (38 Byte) from DMA: 0x054f3b20
+[  773.515981] 000:00-001: URB 0xc74cc560: Free TDs
+[  773.515985] 000:00-001: URB 0xc74cc560: PURB_IDLE
+[  773.515990] RT-USB-PING: [ERROR] Received / Sent only 1 / 38 Byte
+[  773.515996] RT-USB-PING: End-Time  URB[ 0] (Semaphore): 
+1217940642854102423
+[  775.789740] -----------&gt; deleting urb...
+[  775.790595] 000: URB 0xc74cc560 unregistered
+[  775.790941] BASE-RT: URB base deleted
+[  775.791254] RT-USBCORE: Driver releases USB-Device[1]
+[  775.791602] --- LIST USB-DEVICES -------------------------
+[  775.791959]  No HCD VENDOR   PROD  CLS SCLS PROT -&gt;CTRL CTRL-&gt; -&gt;BULK 
+BULK-&gt;  -&gt;INT  INT-&gt; -&gt;ISOC ISOC-&gt; STATE SPEED USED
+[  775.792767] 001 000 0x0cd5 0x0009 0xff 0xff 0xff 0x0001 0x0001 0x0006 
+0x0006 0x0000 0x0000 0x0000 0x0000 00000 00002    -
+[  775.793364] --- END USB-DEVICES --------------------------
+[  775.793728] RT-USB-PING: STOPPED, 0 Byte allocated
+
+
+Another thing that i do not see on my computer is this message from the 
+dmesg of the september 2006 topic :
+
+[17181603.064000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17181603.064000] UHC @ 0xe0c178a0: Checking for Interrupts
+[17181603.064000] UHC[0]: Handling
+[17181603.064000] 000: ===&gt; Incoming IRQ 11, COMPLETE
+[17181603.064000] 000:00-001: URB 0xde0137c0: COMPLETED
+[17181603.064000] 000:00-001: URB 0xde0137c0: HANDLING
+[17181603.064000] 000:00-001: URB 0xde0137c0: Wake up Driver
+[17181603.064000] UHC @ 0xe0c178e0: Checking for Interrupts
+[17181603.064000] UHC[1]: No state-bit set
+[17181603.064000] UHC @ 0xe0c17920: Checking for Interrupts
+[17181603.064000] UHC[2]: No state-bit set
+[17181603.064000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17181603.064000] 000:00-001: URB 0xde0137c0: RT_SEM waked up by ISR, 
+Sleeptime: (948219 ns)
+
+it seems that it should appear juste after init module end. However i 
+can see BEGIN RTAI-INTERRUPT HANDLER when rt_uhci_hcd module is loaded 
+and before rt_usb_ping is launched. Are there any problems with IRQ 
+handling ?
+
+
+And the last one, how do you proceed to retrieve IN buffer, with OUT we 
+just have to do this :
+memcpy(urb_base.p_urb-&gt;p_transfer_buffer, sendBuff, buffer_size);
+and then call RT task.
+
+would it be possible to do this ? :
+- call RT task
+- memcpy(recBuff, urb_base.p_urb-&gt;p_transfer_buffer, buffer_size);
+
+Thank you very much,
+Antoine
+
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000081.html">[Usb4rt-users] Problem with BULK URB
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#80">[ date ]</a>
+              <a href="thread.html#80">[ thread ]</a>
+              <a href="subject.html#80">[ subject ]</a>
+              <a href="author.html#80">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

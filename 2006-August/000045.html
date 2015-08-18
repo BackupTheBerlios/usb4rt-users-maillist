@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB configuration with alternate interface
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%20configuration%20with%20alternate%20interface&In-Reply-To=%3C44E9EB1C.2060507%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000044.html">
+   <LINK REL="Next"  HREF="000046.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB configuration with alternate interface</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%20configuration%20with%20alternate%20interface&In-Reply-To=%3C44E9EB1C.2060507%40web.de%3E"
+       TITLE="[Usb4rt-users] USB configuration with alternate interface">jan.kiszka at web.de
+       </A><BR>
+    <I>Mon Aug 21 19:19:24 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000044.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+        <LI>Next message: <A HREF="000046.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#45">[ date ]</a>
+              <a href="thread.html#45">[ thread ]</a>
+              <a href="subject.html#45">[ subject ]</a>
+              <a href="author.html#45">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman wrote:
+&gt;<i> OK,
+</I>&gt;<i> 
+</I>&gt;<i> I could fix it myself. (Isn't open source beautiful ?) I pasted the source code that i (slightly) modified below for information. It's to do with the 'alternate' variable. It holds whether an interface is alternate or not. If so, endpoints are discarded.
+</I>&gt;<i> 
+</I>
+Sound good to me for most use-cases. Once we refactor the API over RTDM,
+we could reconsider this and add real support for alternate settings (if
+there is a real need). Maybe Joerg is listening and can comment on it as
+well.
+
+But could you post a &quot;diff -up file.orig file&quot; instead of the full file?
+Makes it easier to read and to apply to SVN.
+
+Thanks,
+Jan
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 250 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060821/46255f88/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060821/46255f88/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000044.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+	<LI>Next message: <A HREF="000046.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#45">[ date ]</a>
+              <a href="thread.html#45">[ thread ]</a>
+              <a href="subject.html#45">[ subject ]</a>
+              <a href="author.html#45">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

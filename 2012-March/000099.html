@@ -1,0 +1,297 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] Fwd: usb4rt support for USB 2.0 ?
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2012-March/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Fwd%3A%20usb4rt%20support%20for%20USB%202.0%20%3F&In-Reply-To=%3CCAOmRMTc2aWRSh2QO0iUchUUvbOaFJ%2BcwprU3d_ayAVyd2YxfqA%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000098.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] Fwd: usb4rt support for USB 2.0 ?</H1>
+    <B>Peter Pastor</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Fwd%3A%20usb4rt%20support%20for%20USB%202.0%20%3F&In-Reply-To=%3CCAOmRMTc2aWRSh2QO0iUchUUvbOaFJ%2BcwprU3d_ayAVyd2YxfqA%40mail.gmail.com%3E"
+       TITLE="[Usb4rt-users] Fwd: usb4rt support for USB 2.0 ?">peter.pastor at gmail.com
+       </A><BR>
+    <I>Thu Mar  8 01:22:58 CET 2012</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000098.html">[Usb4rt-users] usb4rt support for USB 2.0 ?
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#99">[ date ]</a>
+              <a href="thread.html#99">[ thread ]</a>
+              <a href="subject.html#99">[ subject ]</a>
+              <a href="author.html#99">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hello,
+
+This might not be the right place... but I will give it a shot nevertheless.
+I am wondering whether someone has had success on getting usb20rt to work?
+
+I managed to fix some compile issues ( I am running linux 2.6.35.9 and
+xenomai 2.5.6 ). However, when inserting the rtdm-ehci-hcd module the
+system gets into a &quot;funny&quot; state. It seems to &quot;freeze&quot; after a
+while... the insmod command never returns. Also, the rtdm-ehci-hcd
+module shows up in lsmod and also in /proc/xenomai/stat.
+
+dmsg shows:
+========================
+[  533.539905] rtdm_usbcore: registered new driver rtdm_hub
+[  551.309497] rtdm_ehci_hcd 0000:00:1a.7: PCI INT C -&gt; GSI 22 (level,
+low) -&gt; IRQ 22
+[  551.309542] rtdm_ehci_hcd 0000:00:1a.7: setting latency timer to 64
+[  551.309545] rtdm_ehci_hcd 0000:00:1a.7: EHCI Host Controller (Realtime)
+[  551.309559] rtdm_ehci_hcd 0000:00:1a.7: debug port 1
+[  551.309570] Xenomai: assertion failed at
+kernel/xenomai/skins/rtdm/drvlib.c:1236 (!xnpod_unblockable_p())
+[  551.310539] rtdm_ehci_hcd 0000:00:1a.7: new USB bus registered,
+assigned bus number 1
+[  551.310551] rtdm_ehci_hcd 0000:00:1a.7: realtime irq 22, io mem 0xf7ffa000
+[  551.310575] Xenomai: assertion failed at
+kernel/xenomai/skins/rtdm/drvlib.c:1236 (!xnpod_unblockable_p())
+[  551.310661] Xenomai: assertion failed at
+kernel/xenomai/skins/rtdm/drvlib.c:1236 (!xnpod_unblockable_p())
+[  551.314648] rtdm_ehci_hcd 0000:00:1a.7: cache line size of 64 is
+not supported
+[  551.314655] rtdm_ehci_hcd 0000:00:1a.7: USB 2.0 initialized, EHCI
+1.00, driver 01 july 2006
+[  551.314658] Xenomai: assertion failed at
+kernel/xenomai/skins/rtdm/drvlib.c:1236 (!xnpod_unblockable_p())
+[  551.314755] Xenomai: fatal: bug at
+/root/usb/modified-usb20rt-distribution/stack/core/hcd.c:487
+(!rthal_local_irq_disabled())
+[  551.314757]  CPU  PID    PRI      TIMEOUT  STAT      NAME
+[  551.314758] &gt;  0  0       -1      0        00500080  ROOT/0
+[  551.314758] &gt;  1  0       -1      0        00500080  ROOT/1
+[  551.314759] &gt;  2  0       -1      0        00500080  ROOT/2
+[  551.314760] &gt;  3  0       -1      0        00500080  ROOT/3
+[  551.314761] Master time base: clock=1302437047413
+[  551.314761] Current CPU: #2
+[  551.314762]
+[  551.315299]  ffff880177c19a80 ffffffff81c2a4c0 ffff880001f00000
+ffff880198d5c000
+[  551.315302]  ffff880199b7de40 0000000000000200 000000000000f400
+ffff880177c19ac8
+[  551.315306]  ffffffff8100732c ffff880177c19b38 ffffffffa0f47a1c
+ffff880177c19ae8
+[  551.315310] Call Trace:
+[  551.315317]  [&lt;ffffffff8100732c&gt;] ? show_stack+0x1c/0x20
+[  551.315323]  [&lt;ffffffffa0f47a1c&gt;] ? hcd_submit_urb+0x6dc/0x780 [rtdm_usbcore]
+[  551.315327]  [&lt;ffffffff8104e014&gt;] ? release_console_sem+0x1f4/0x240
+[  551.315333]  [&lt;ffffffffa0f4ef1e&gt;] ? rtdm_usb_submit_urb+0x1ae/0x1e0
+[rtdm_usbcore]
+[  551.315338]  [&lt;ffffffffa0f4d31f&gt;] ? usb_start_wait_urb+0x4f/0xc0
+[rtdm_usbcore]
+[  551.315343]  [&lt;ffffffffa0f4dafa&gt;] ? rtdm_usb_sg_wait+0x31a/0x3b0
+[rtdm_usbcore]
+[  551.315349]  [&lt;ffffffffa0f4e49a&gt;] ?
+rtdm_usb_get_descriptor+0x8a/0xd0 [rtdm_usbcore]
+[  551.315353]  [&lt;ffffffff810aff35&gt;] ? __ipipe_restore_root+0x35/0x40
+[  551.315358]  [&lt;ffffffffa0f4e57f&gt;] ?
+usb_get_device_descriptor+0x9f/0xd0 [rtdm_usbcore]
+[  551.315363]  [&lt;ffffffffa0f484f5&gt;] ? rtdm_usb_add_hcd+0x375/0x720
+[rtdm_usbcore]
+[  551.315367]  [&lt;ffffffffa0f45f8b&gt;] ?
+rtdm_usb_hcd_pci_probe+0x16b/0x350 [rtdm_usbcore]
+[  551.315373]  [&lt;ffffffff81317af7&gt;] ? local_pci_probe+0x17/0x20
+[  551.315376]  [&lt;ffffffff81317e51&gt;] ? pci_device_probe+0x101/0x120
+[  551.315382]  [&lt;ffffffff813a1f82&gt;] ? driver_sysfs_add+0x62/0x90
+[  551.315385]  [&lt;ffffffff813a20c9&gt;] ? driver_probe_device+0x89/0x1a0
+[  551.315388]  [&lt;ffffffff813a227b&gt;] ? __driver_attach+0x9b/0xa0
+[  551.315391]  [&lt;ffffffff813a21e0&gt;] ? __driver_attach+0x0/0xa0
+[  551.315394]  [&lt;ffffffff813a1518&gt;] ? bus_for_each_dev+0x68/0x90
+[  551.315397]  [&lt;ffffffff813a1f1e&gt;] ? driver_attach+0x1e/0x20
+[  551.315400]  [&lt;ffffffff813a180e&gt;] ? bus_add_driver+0xde/0x280
+[  551.315403]  [&lt;ffffffff813a25a0&gt;] ? driver_register+0x80/0x150
+[  551.315407]  [&lt;ffffffff8155b946&gt;] ? notifier_call_chain+0x56/0x80
+[  551.315410]  [&lt;ffffffff813180d6&gt;] ? __pci_register_driver+0x56/0xd0
+[  551.315414]  [&lt;ffffffff81071a45&gt;] ? __blocking_notifier_call_chain+0x65/0x80
+[  551.315418]  [&lt;ffffffffa00a4000&gt;] ? init+0x0/0x30 [rtdm_ehci_hcd]
+[  551.315421]  [&lt;ffffffffa00a402e&gt;] ? init+0x2e/0x30 [rtdm_ehci_hcd]
+[  551.315426]  [&lt;ffffffff810001dc&gt;] ? do_one_initcall+0x3c/0x1c0
+[  551.315430]  [&lt;ffffffff81087fdb&gt;] ? sys_init_module+0xbb/0x200
+[  551.315433]  [&lt;ffffffff8100302f&gt;] ? system_call_fastpath+0x16/0x1b
+========================
+
+I appreciate any help,
+THANKS,
+ peter
+
+
+---------- Forwarded message ----------
+From: Peter Pastor &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">ppastorsa at gmail.com</A>&gt;
+Date: Fri, Mar 2, 2012 at 4:34 PM
+Subject: usb4rt support for USB 2.0 ?
+To: <A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">usb4rt-users at lists.berlios.de</A>
+
+
+Hello,
+
+I am running linux 2.6.35.9 and xenomai 2.5.6. I am trying to use
+usb4rt and downloaded svn rev 67.
+I had some minor issues when compiling it and I had to disable
+CONFIG_MODVERSIONS.
+Anyway, I followed the instructions in the README and everything
+seemed to have worked out.
+
+&#160;# rmmod uhci_hcd
+&#160;# rmmod ehci_hcd
+&#160;# insmod core/rt_usbcore.ko
+&#160;# insmod host/rt_uhci_hcd.ko
+&#160;# cat /proc/xenomai/irq
+IRQ &#160; &#160; &#160; &#160; CPU0 &#160; &#160; &#160; &#160;CPU1 &#160; &#160; &#160; &#160;CPU2 &#160; &#160; &#160; &#160;CPU3
+&#160;16: &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160;4000 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; rt_uhci
+&#160;17: &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; rt_uhci
+&#160;22: &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; rt_uhci
+&#160;23: &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; rt_uhci
+4361: &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 1 &#160; &#160; &#160; &#160; &#160; 1 &#160; &#160; &#160; &#160; &#160; 1 &#160; &#160; &#160; &#160; [IPI]
+4364: &#160; &#160; 1038581 &#160; &#160; &#160;825049 &#160; &#160; &#160;814658 &#160; &#160; &#160;452344 &#160; &#160; &#160; &#160; [timer]
+4365: &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; [critical sync]
+4418: &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; &#160; 0 &#160; &#160; &#160; &#160; [virtual]
+
+# dmesg &gt; dmesg.txt
+(see attached file)
+
+However rt_usbping.ko does not find my usb device. After adding some
+debbuging output into rt_usbcore.c I figured that rt_usbcore only
+shows USB1.1 devices and after reading the specs of my usb device I
+figured it uses USB2.0.
+
+Long story short, are there any plans on extending usb4rt to usb2.0?
+On that note... what is the status of rt_ftdi_sio.ko. Is there a plan
+on continuing on the development? Unfortunately, I am fairly useless
+when it comes to these things, I don't have any background in
+programming drivers. Are there any alternatives to usb4rt when using
+xenomai ?
+
+THANKS for any help,
+&#160;peter
+-------------- next part --------------
+[  484.271421] ehci_hcd 0000:00:1d.7: remove, state 1
+[  484.271427] usb usb8: USB disconnect, address 1
+[  484.275403] ehci_hcd 0000:00:1d.7: USB bus 8 deregistered
+[  484.275420] ehci_hcd 0000:00:1d.7: PCI INT A disabled
+[  484.275426] ehci_hcd 0000:00:1a.7: remove, state 1
+[  484.275430] usb usb7: USB disconnect, address 1
+[  484.275432] usb 7-3: USB disconnect, address 3
+[  484.340178] ehci_hcd 0000:00:1a.7: USB bus 7 deregistered
+[  484.340197] ehci_hcd 0000:00:1a.7: PCI INT C disabled
+[  484.340526] uhci_hcd 0000:00:1d.2: remove, state 1
+[  484.340532] usb usb6: USB disconnect, address 1
+[  484.340633] uhci_hcd 0000:00:1d.2: USB bus 6 deregistered
+[  484.340641] uhci_hcd 0000:00:1d.2: PCI INT C disabled
+[  484.340646] uhci_hcd 0000:00:1d.1: remove, state 1
+[  484.340650] usb usb5: USB disconnect, address 1
+[  484.340723] uhci_hcd 0000:00:1d.1: USB bus 5 deregistered
+[  484.340729] uhci_hcd 0000:00:1d.1: PCI INT B disabled
+[  484.340734] uhci_hcd 0000:00:1d.0: remove, state 1
+[  484.340738] usb usb4: USB disconnect, address 1
+[  484.340814] uhci_hcd 0000:00:1d.0: USB bus 4 deregistered
+[  484.340821] uhci_hcd 0000:00:1d.0: PCI INT A disabled
+[  484.340825] uhci_hcd 0000:00:1a.2: remove, state 1
+[  484.340829] usb usb3: USB disconnect, address 1
+[  484.341683] uhci_hcd 0000:00:1a.2: USB bus 3 deregistered
+[  484.341692] uhci_hcd 0000:00:1a.2: PCI INT C disabled
+[  484.341698] uhci_hcd 0000:00:1a.1: remove, state 1
+[  484.341701] usb usb2: USB disconnect, address 1
+[  484.377044] hub 2-0:1.0: hub_port_status failed (err = -19)
+[  484.377116] hub 2-0:1.0: connect-debounce failed, port 1 disabled
+[  484.377277] uhci_hcd 0000:00:1a.1: USB bus 2 deregistered
+[  484.377285] uhci_hcd 0000:00:1a.1: PCI INT B disabled
+[  484.377291] uhci_hcd 0000:00:1a.0: remove, state 1
+[  484.377295] usb usb1: USB disconnect, address 1
+[  484.377372] uhci_hcd 0000:00:1a.0: USB bus 1 deregistered
+[  484.377378] uhci_hcd 0000:00:1a.0: PCI INT A disabled
+[  484.378217] ieee1394: Node removed: ID:BUS[0-00:1023]  GUID[00053d0080465419]
+[  514.441758] usbcore: deregistering interface driver usb-storage
+[  516.394273] usbcore: deregistering device driver usb
+[  516.394295] usbcore: deregistering interface driver usbfs
+[  516.394320] usbcore: deregistering interface driver hub
+[  533.539905] rtdm_usbcore: registered new driver rtdm_hub
+[  551.309497] rtdm_ehci_hcd 0000:00:1a.7: PCI INT C -&gt; GSI 22 (level, low) -&gt; IRQ 22
+[  551.309542] rtdm_ehci_hcd 0000:00:1a.7: setting latency timer to 64
+[  551.309545] rtdm_ehci_hcd 0000:00:1a.7: EHCI Host Controller (Realtime)
+[  551.309559] rtdm_ehci_hcd 0000:00:1a.7: debug port 1
+[  551.309570] Xenomai: assertion failed at kernel/xenomai/skins/rtdm/drvlib.c:1236 (!xnpod_unblockable_p())
+[  551.310539] rtdm_ehci_hcd 0000:00:1a.7: new USB bus registered, assigned bus number 1
+[  551.310551] rtdm_ehci_hcd 0000:00:1a.7: realtime irq 22, io mem 0xf7ffa000
+[  551.310575] Xenomai: assertion failed at kernel/xenomai/skins/rtdm/drvlib.c:1236 (!xnpod_unblockable_p())
+[  551.310661] Xenomai: assertion failed at kernel/xenomai/skins/rtdm/drvlib.c:1236 (!xnpod_unblockable_p())
+[  551.314648] rtdm_ehci_hcd 0000:00:1a.7: cache line size of 64 is not supported
+[  551.314655] rtdm_ehci_hcd 0000:00:1a.7: USB 2.0 initialized, EHCI 1.00, driver 01 july 2006
+[  551.314658] Xenomai: assertion failed at kernel/xenomai/skins/rtdm/drvlib.c:1236 (!xnpod_unblockable_p())
+[  551.314755] Xenomai: fatal: bug at /root/usb/modified-usb20rt-distribution/stack/core/hcd.c:487 (!rthal_local_irq_disabled())
+[  551.314757]  CPU  PID    PRI      TIMEOUT  STAT      NAME
+[  551.314758] &gt;  0  0       -1      0        00500080  ROOT/0
+[  551.314758] &gt;  1  0       -1      0        00500080  ROOT/1
+[  551.314759] &gt;  2  0       -1      0        00500080  ROOT/2
+[  551.314760] &gt;  3  0       -1      0        00500080  ROOT/3
+[  551.314761] Master time base: clock=1302437047413
+[  551.314761] Current CPU: #2
+[  551.314762] 
+[  551.315299]  ffff880177c19a80 ffffffff81c2a4c0 ffff880001f00000 ffff880198d5c000
+[  551.315302]  ffff880199b7de40 0000000000000200 000000000000f400 ffff880177c19ac8
+[  551.315306]  ffffffff8100732c ffff880177c19b38 ffffffffa0f47a1c ffff880177c19ae8
+[  551.315310] Call Trace:
+[  551.315317]  [&lt;ffffffff8100732c&gt;] ? show_stack+0x1c/0x20
+[  551.315323]  [&lt;ffffffffa0f47a1c&gt;] ? hcd_submit_urb+0x6dc/0x780 [rtdm_usbcore]
+[  551.315327]  [&lt;ffffffff8104e014&gt;] ? release_console_sem+0x1f4/0x240
+[  551.315333]  [&lt;ffffffffa0f4ef1e&gt;] ? rtdm_usb_submit_urb+0x1ae/0x1e0 [rtdm_usbcore]
+[  551.315338]  [&lt;ffffffffa0f4d31f&gt;] ? usb_start_wait_urb+0x4f/0xc0 [rtdm_usbcore]
+[  551.315343]  [&lt;ffffffffa0f4dafa&gt;] ? rtdm_usb_sg_wait+0x31a/0x3b0 [rtdm_usbcore]
+[  551.315349]  [&lt;ffffffffa0f4e49a&gt;] ? rtdm_usb_get_descriptor+0x8a/0xd0 [rtdm_usbcore]
+[  551.315353]  [&lt;ffffffff810aff35&gt;] ? __ipipe_restore_root+0x35/0x40
+[  551.315358]  [&lt;ffffffffa0f4e57f&gt;] ? usb_get_device_descriptor+0x9f/0xd0 [rtdm_usbcore]
+[  551.315363]  [&lt;ffffffffa0f484f5&gt;] ? rtdm_usb_add_hcd+0x375/0x720 [rtdm_usbcore]
+[  551.315367]  [&lt;ffffffffa0f45f8b&gt;] ? rtdm_usb_hcd_pci_probe+0x16b/0x350 [rtdm_usbcore]
+[  551.315373]  [&lt;ffffffff81317af7&gt;] ? local_pci_probe+0x17/0x20
+[  551.315376]  [&lt;ffffffff81317e51&gt;] ? pci_device_probe+0x101/0x120
+[  551.315382]  [&lt;ffffffff813a1f82&gt;] ? driver_sysfs_add+0x62/0x90
+[  551.315385]  [&lt;ffffffff813a20c9&gt;] ? driver_probe_device+0x89/0x1a0
+[  551.315388]  [&lt;ffffffff813a227b&gt;] ? __driver_attach+0x9b/0xa0
+[  551.315391]  [&lt;ffffffff813a21e0&gt;] ? __driver_attach+0x0/0xa0
+[  551.315394]  [&lt;ffffffff813a1518&gt;] ? bus_for_each_dev+0x68/0x90
+[  551.315397]  [&lt;ffffffff813a1f1e&gt;] ? driver_attach+0x1e/0x20
+[  551.315400]  [&lt;ffffffff813a180e&gt;] ? bus_add_driver+0xde/0x280
+[  551.315403]  [&lt;ffffffff813a25a0&gt;] ? driver_register+0x80/0x150
+[  551.315407]  [&lt;ffffffff8155b946&gt;] ? notifier_call_chain+0x56/0x80
+[  551.315410]  [&lt;ffffffff813180d6&gt;] ? __pci_register_driver+0x56/0xd0
+[  551.315414]  [&lt;ffffffff81071a45&gt;] ? __blocking_notifier_call_chain+0x65/0x80
+[  551.315418]  [&lt;ffffffffa00a4000&gt;] ? init+0x0/0x30 [rtdm_ehci_hcd]
+[  551.315421]  [&lt;ffffffffa00a402e&gt;] ? init+0x2e/0x30 [rtdm_ehci_hcd]
+[  551.315426]  [&lt;ffffffff810001dc&gt;] ? do_one_initcall+0x3c/0x1c0
+[  551.315430]  [&lt;ffffffff81087fdb&gt;] ? sys_init_module+0xbb/0x200
+[  551.315433]  [&lt;ffffffff8100302f&gt;] ? system_call_fastpath+0x16/0x1b
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000098.html">[Usb4rt-users] usb4rt support for USB 2.0 ?
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#99">[ date ]</a>
+              <a href="thread.html#99">[ thread ]</a>
+              <a href="subject.html#99">[ subject ]</a>
+              <a href="author.html#99">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

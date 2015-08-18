@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB4RT and PCI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB4RT%20and%20PCI&In-Reply-To=%3C43732B4B.8000806%40langenberg-home.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000021.html">
+   <LINK REL="Next"  HREF="000025.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB4RT and PCI</H1>
+    <B>J&#246;rg Langenberg</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB4RT%20and%20PCI&In-Reply-To=%3C43732B4B.8000806%40langenberg-home.de%3E"
+       TITLE="[Usb4rt-users] USB4RT and PCI">joerg at langenberg-home.de
+       </A><BR>
+    <I>Thu Nov 10 12:13:15 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000021.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+        <LI>Next message: <A HREF="000025.html">[Usb4rt-users] USB Webcam on RTAI, HOW TO ?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#22">[ date ]</a>
+              <a href="thread.html#22">[ thread ]</a>
+              <a href="subject.html#22">[ subject ]</a>
+              <a href="author.html#22">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman schrieb:
+&gt;<i> I have just found the problem : apperently the host
+</I>&gt;<i> controller (VIA) on my hardware has different
+</I>&gt;<i> behavior.
+</I>&gt;<i>
+</I>&gt;<i> In function uhc_init (rt_uhci.c) the framelist-address
+</I>&gt;<i> is written to the register together with some other
+</I>&gt;<i> configurations (framenumber, max packet size for
+</I>&gt;<i> reclamation).
+</I>&gt;<i>
+</I>&gt;<i> In function uhc_start that follows a host controller
+</I>&gt;<i> reset is triggered. On my hardware this causes the
+</I>&gt;<i> framelist-address register to be cleared ! The other
+</I>&gt;<i> configurations in the registers remain unchanged. If
+</I>&gt;<i> the host controller is started it will read address
+</I>&gt;<i> NULL : this causes the Host System Error.
+</I>&gt;<i>   
+</I>
+Bug removed ...
+
+&gt;<i> If the framelist-address register is rewritten after
+</I>&gt;<i> the reset, all works ok. 
+</I>&gt;<i>
+</I>&gt;<i> I can now ping the device.
+</I>&gt;<i>
+</I>&gt;<i> Cedric.
+</I>&gt;<i>   
+</I>
+Please check out the new version and test it. My Intel UHC is working
+with this version without problems.
+
+
+J&#246;rg
+
+&gt;<i> _______________________________________________
+</I>&gt;<i> Usb4rt-users mailing list
+</I>&gt;<i> <A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">Usb4rt-users at lists.berlios.de</A>
+</I>&gt;<i> <A HREF="http://lists.berlios.de/mailman/listinfo/usb4rt-users">http://lists.berlios.de/mailman/listinfo/usb4rt-users</A>
+</I>&gt;<i>
+</I>&gt;<i>   
+</I>
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000021.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+	<LI>Next message: <A HREF="000025.html">[Usb4rt-users] USB Webcam on RTAI, HOW TO ?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#22">[ date ]</a>
+              <a href="thread.html#22">[ thread ]</a>
+              <a href="subject.html#22">[ subject ]</a>
+              <a href="author.html#22">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

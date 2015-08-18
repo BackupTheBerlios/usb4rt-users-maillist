@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] usb4rt and xenomai 2.0
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20and%20xenomai%202.0&In-Reply-To=%3C4367E3C3.5060504%40langenberg-home.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000012.html">
+   <LINK REL="Next"  HREF="000014.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] usb4rt and xenomai 2.0</H1>
+    <B>Joerg Langenberg</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20and%20xenomai%202.0&In-Reply-To=%3C4367E3C3.5060504%40langenberg-home.de%3E"
+       TITLE="[Usb4rt-users] usb4rt and xenomai 2.0">joerg at langenberg-home.de
+       </A><BR>
+    <I>Tue Nov  1 22:53:07 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000012.html">[Usb4rt-users] usb4rt and xenomai 2.0
+</A></li>
+        <LI>Next message: <A HREF="000014.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#13">[ date ]</a>
+              <a href="thread.html#13">[ thread ]</a>
+              <a href="subject.html#13">[ subject ]</a>
+              <a href="author.html#13">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman schrieb:
+&gt;<i> Joerg,
+</I>&gt;<i>
+</I>&gt;<i> Thank you for that information.
+</I>&gt;<i>
+</I>&gt;<i> Can you give me a hint why the .configure script is
+</I>&gt;<i> stopping with an error when it checks for the header
+</I>&gt;<i> file : rtai/sem.h ?
+</I>&gt;<i>   
+</I>
+usb4rt only works with Xenomai. The old RTAI/Fusion semaphore header
+file was rtai/sem.h,
+the name of Xenomai semaphore header file still is sem.h but it is in
+the native path (native/sem.h) now.
+The error occured because of the old configure script looking for the
+invalid rtai/sem.h.
+
+J&#246;rg
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000012.html">[Usb4rt-users] usb4rt and xenomai 2.0
+</A></li>
+	<LI>Next message: <A HREF="000014.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#13">[ date ]</a>
+              <a href="thread.html#13">[ thread ]</a>
+              <a href="subject.html#13">[ subject ]</a>
+              <a href="author.html#13">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB configuration with alternate interface
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%20configuration%20with%20alternate%20interface&In-Reply-To=%3C44E9C7ED.8020504%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000042.html">
+   <LINK REL="Next"  HREF="000044.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB configuration with alternate interface</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%20configuration%20with%20alternate%20interface&In-Reply-To=%3C44E9C7ED.8020504%40web.de%3E"
+       TITLE="[Usb4rt-users] USB configuration with alternate interface">jan.kiszka at web.de
+       </A><BR>
+    <I>Mon Aug 21 16:49:17 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000042.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+        <LI>Next message: <A HREF="000044.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#43">[ date ]</a>
+              <a href="thread.html#43">[ thread ]</a>
+              <a href="subject.html#43">[ subject ]</a>
+              <a href="author.html#43">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman wrote:
+&gt;<i> Jan,
+</I>&gt;<i> 
+</I>&gt;<i> Yes, &quot;lsusb -v&quot; was used to print out the configuration. There is a driver  for this device (both linux and windows, but not rt).
+</I>&gt;<i> 
+</I>&gt;<i> The USB spec (1.1) allows a single interface to have alternate settings : 
+</I>&gt;<i> 
+</I>&gt;<i> paragraph 9.6.2 (configuration)
+</I>&gt;<i> &quot;A USB device has one or more configuration descriptors. Each configuration has one or more interfaces
+</I>&gt;<i> and each interface has zero or more endpoints. An endpoint is not shared among interfaces within a single
+</I>&gt;<i> configuration unless the endpoint is used by alternate settings of the same interface.&quot;
+</I>&gt;<i> 
+</I>&gt;<i> paragraph 9.6.3 (interface)
+</I>&gt;<i> &quot;An interface may include alternate settings that allow the endpoints and/or their characteristics to be varied
+</I>&gt;<i> after the device has been configured. The default setting for an interface is always alternate setting zero.
+</I>&gt;<i> The SetInterface() request is used to select an alternate setting or to return to the default setting. The
+</I>&gt;<i> GetInterface() request returns the selected alternate setting.
+</I>&gt;<i> Alternate settings allow a portion of the device configuration to be varied while other interfaces remain in
+</I>&gt;<i> operation. If a configuration has alternate settings for one or more of its interfaces, a separate interface
+</I>&gt;<i> descriptor and its associated endpoints are included for each setting.&quot;
+</I>&gt;<i> 
+</I>&gt;<i> I do not really need the possibility to switch to the alternate settings. Just have the driver to cope with the presence of an alternate setting, and to discard it.
+</I>&gt;<i> 
+</I>&gt;<i> This is a dump of the device. You can see there are two incoming communication types for endpoint 2. The maxpacket size is taken from the alternate setting (isochronous read), in stead of the standard one.
+</I>
+--&lt;snipped messed up table - please post plain text&gt;--
+
+This obviously is a bug in the core. I'm sorry, I can't help here
+(time...). Maybe you could try analysing what happens to the information
+and where things go wrong. There is the easy-to-setup-but-unhandy-to-use
+printk way or the more-complicated-to-setup-but-easy-to-use kgdb
+approach [1].
+
+Jan
+
+[1] <A HREF="http://download.gna.org/adeos/patches/v2.6/i386/kgdb/">http://download.gna.org/adeos/patches/v2.6/i386/kgdb/</A>
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 250 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060821/2fec672e/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060821/2fec672e/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000042.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+	<LI>Next message: <A HREF="000044.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#43">[ date ]</a>
+              <a href="thread.html#43">[ thread ]</a>
+              <a href="subject.html#43">[ subject ]</a>
+              <a href="author.html#43">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

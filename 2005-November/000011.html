@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] usb4rt and xenomai 2.0
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20and%20xenomai%202.0&In-Reply-To=%3C4367B819.2040201%40langenberg-home.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000010.html">
+   <LINK REL="Next"  HREF="000012.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] usb4rt and xenomai 2.0</H1>
+    <B>Joerg Langenberg</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20and%20xenomai%202.0&In-Reply-To=%3C4367B819.2040201%40langenberg-home.de%3E"
+       TITLE="[Usb4rt-users] usb4rt and xenomai 2.0">joerg at langenberg-home.de
+       </A><BR>
+    <I>Tue Nov  1 19:46:49 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000010.html">[Usb4rt-users] usb4rt and xenomai 2.0
+</A></li>
+        <LI>Next message: <A HREF="000012.html">[Usb4rt-users] usb4rt and xenomai 2.0
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#11">[ date ]</a>
+              <a href="thread.html#11">[ thread ]</a>
+              <a href="subject.html#11">[ subject ]</a>
+              <a href="author.html#11">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman schrieb:
+&gt;<i> Hello.
+</I>&gt;<i>
+</I>&gt;<i> Is usb4rt svn rev 39 already working with xenomai 2.0
+</I>&gt;<i> and kernel 2.6.13.3 ? 
+</I>&gt;<i>   
+</I>
+Now, usb4rt is working with gcc version 4 and xenomai 2.0. I have tested
+the compile process with
+a linux 2.6.13.4 kernel, which has been patched with the adeos ipipe patch.
+
+&gt;<i> I am experiencing some problems when i run :
+</I>&gt;<i> ./configure --with-xeno-dir=/usr/realtime
+</I>&gt;<i>   
+</I>
+You can use make [old|menu|x]config now.
+
+&gt;<i> Kernel source dir : /usr/src/linux
+</I>&gt;<i> Xenomai source dir : /usr/src/xenomai-2.0
+</I>&gt;<i> Xenomai build dir : /usr/src/build
+</I>&gt;<i> Xenomai install dir : /usr/realtime
+</I>&gt;<i> USB4RT source dir : /usr/src/usb4rt
+</I>&gt;<i>
+</I>&gt;<i> This is what i get :
+</I>&gt;<i> ...
+</I>&gt;<i> checking for Xenomai installation... /usr/realtime
+</I>&gt;<i> checking for Xenomai DESTDIR... none
+</I>&gt;<i> checking for Xenomai version... xeno-20
+</I>&gt;<i> checking for Xenomai config file...
+</I>&gt;<i> /usr/realtime/share/xenomai/config-xenomai-2.0
+</I>&gt;<i> checking for Xenomai native skin... y
+</I>&gt;<i> checking for Xenomai target arch... i386
+</I>&gt;<i> checking for USB4RT target arch... i386
+</I>&gt;<i> checking for Linux source tree...
+</I>&gt;<i> /lib/modules/2.6.13.3/build (kernel 2.6.13.3)
+</I>&gt;<i> checking for CROSS_COMPILE... none
+</I>&gt;<i> checking for kernel module extension... .ko
+</I>&gt;<i> checking for rtai/sem.h... no
+</I>&gt;<i> configure: error: *** header not found or working,
+</I>&gt;<i> please check Xenomai installation
+</I>&gt;<i> rm: cannot remove `core': Is a directory
+</I>&gt;<i>
+</I>&gt;<i> Thanks for your help.
+</I>&gt;<i>
+</I>&gt;<i> Cedric.
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> 	
+</I>&gt;<i> 		
+</I>&gt;<i> __________________________________ 
+</I>&gt;<i> Yahoo! Mail - PC Magazine Editors' Choice 2005 
+</I>&gt;<i> <A HREF="http://mail.yahoo.com">http://mail.yahoo.com</A>
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> Usb4rt-users mailing list
+</I>&gt;<i> <A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">Usb4rt-users at lists.berlios.de</A>
+</I>&gt;<i> <A HREF="http://lists.berlios.de/mailman/listinfo/usb4rt-users">http://lists.berlios.de/mailman/listinfo/usb4rt-users</A>
+</I>&gt;<i>
+</I>&gt;<i>   
+</I>
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000010.html">[Usb4rt-users] usb4rt and xenomai 2.0
+</A></li>
+	<LI>Next message: <A HREF="000012.html">[Usb4rt-users] usb4rt and xenomai 2.0
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#11">[ date ]</a>
+              <a href="thread.html#11">[ thread ]</a>
+              <a href="subject.html#11">[ subject ]</a>
+              <a href="author.html#11">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

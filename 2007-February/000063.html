@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress	on faulty bulk read/write operation
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2007-February/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20About%20USB4RT%20for%20Xenomai%202.3%20and%20about%20progress%0A%09on%20faulty%20bulk%20read/write%20operation&In-Reply-To=%3Cd3623eab0702271416n7bf8d52ax4a1a33bb5ea3e158%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000062.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress	on faulty bulk read/write operation</H1>
+    <B>Jerome Pasquero</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20About%20USB4RT%20for%20Xenomai%202.3%20and%20about%20progress%0A%09on%20faulty%20bulk%20read/write%20operation&In-Reply-To=%3Cd3623eab0702271416n7bf8d52ax4a1a33bb5ea3e158%40mail.gmail.com%3E"
+       TITLE="[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress	on faulty bulk read/write operation">jay at cim.mcgill.ca
+       </A><BR>
+    <I>Tue Feb 27 23:16:10 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000062.html">[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#63">[ date ]</a>
+              <a href="thread.html#63">[ thread ]</a>
+              <a href="subject.html#63">[ subject ]</a>
+              <a href="author.html#63">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>On 2/26/07, Jan Kiszka &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">jan.kiszka at web.de</A>&gt; wrote:
+&gt;<i>
+</I>&gt;<i> Jerome Pasquero wrote:
+</I>&gt;<i> &gt; Hi Jan,
+</I>&gt;<i> &gt;
+</I>&gt;<i> &gt; After putting on the side for a few weeks my project that makes use of
+</I>&gt;<i> &gt; usb4rt,  I am now coming back to it. Right before putting everything on
+</I>&gt;<i> the
+</I>&gt;<i> &gt; back burner, I was trying to figure out 2 recurrent problems with usb4rt
+</I>&gt;<i> &gt; under bulk transfer. One had to do with a weird restriction on the URB
+</I>&gt;<i> size
+</I>&gt;<i> &gt; and the other one with a faulty read operation. These problems were
+</I>&gt;<i> somehow
+</I>&gt;<i> &gt; - i.e. to the best of my capabilities - reported on this mailing list in
+</I>&gt;<i> &gt; September 2006.  Unfortunately, I never succeeded in finding what was
+</I>&gt;<i> &gt; wrong,
+</I>&gt;<i> &gt; even with all your helpful comments.
+</I>&gt;<i> &gt;
+</I>&gt;<i> &gt; In your September 21st 2006 post, you mentioned that there was a student
+</I>&gt;<i> &gt; who
+</I>&gt;<i> &gt; was working on a serial adapter driver. I was wondering if there was any
+</I>&gt;<i> &gt; progress on your side? Either from him or from you. Especially with
+</I>&gt;<i> respect
+</I>&gt;<i> &gt; to the two problems mentioned above.
+</I>&gt;<i>
+</I>&gt;<i> Due to time constraints of his work, he was not able to dig deeper into
+</I>&gt;<i> that issue, only to confirm it.
+</I>&gt;<i>
+</I>&gt;<i> &gt;
+</I>&gt;<i> &gt; I realize that usb4rt is not a high priority project and that you have
+</I>&gt;<i> &gt; limited resources, but I was wondering if there are any plans in the
+</I>&gt;<i> near
+</I>&gt;<i> &gt; future to try to fix these problems.
+</I>&gt;<i>
+</I>&gt;<i> No concrete plans. We would love to have usb4rt working completely, but
+</I>&gt;<i> the pain not having it is still not heavy enough to shift priorities.
+</I>
+
+Yep. I really understand what you need.
+
+
+&gt;<i>
+</I>&gt;<i> &gt; For now, there is a small change that I suggest making to the usb4rt
+</I>&gt;<i> trunk.
+</I>&gt;<i> &gt; Xenomai's latest version,  2.3,  is not supported by usb4rt. Actually, I
+</I>&gt;<i> &gt; suspect that it's only the build system of usb4rt that lacks the
+</I>&gt;<i> detection
+</I>&gt;<i> &gt; of Xenomai 2.3 since there doesn't seem to be huge difference between
+</I>&gt;<i> &gt; Xenomai 2.2 and 2.3. Am I right? If it's the case, could the usb4rt
+</I>&gt;<i> &gt; trunk be
+</I>&gt;<i> &gt; updated accordingly? Thanks
+</I>&gt;<i>
+</I>&gt;<i> Build fix just applied, compiles fine against both 2.3 and trunk here. I
+</I>&gt;<i> also added more archs to configure - before this becomes the next barrier.
+</I>
+
+thanks Jan.
+
+Sorry, right now this is all I can do for you - without having to start
+&gt;<i> diving deeeeep into USB low-level programming on my own. :(
+</I>
+
+
+
+How far did your examinations take you? I once thought about trying qemu
+&gt;<i> with its USB emulation. Xenomai runs fine there (except /wrt temporal
+</I>&gt;<i> determinism, of course), and we use it heavily for development. May this
+</I>&gt;<i> would allow to attach a debugger and/or to snoop the USB traffic via the
+</I>&gt;<i> host USB layer that qemu must use. Just another idea...
+</I>
+
+
+
+It's the same sad reality for all of us. Not enough time to do everything.
+Argh....
+Thankfully, the way things are set-up now, my program that makes use of
+usb4rt seems to work regardless of the two problems above, but it's just
+much slower than it should do. For instance, I need to go through 2 read
+operations to get valid data every time I want to do a bulk read.
+Eventually, I will need to figure out what is wrong in usb4rt because I want
+to be able to run at full speed. For the moment, I will just try Jan's
+suggestion(s) as soon as I have a moment. In the meantime, any other
+suggestions from anyone are welcome, of course.
+
+Thanks a lot for all your support Jan.
+
+Cheers
+
+-jerome
+
+
+Jan
+&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>
+
+-- 
+Jerome Pasquero
+Ph.D. Student
+McGill University
+Haptics Lab
+3480 University Street Room 410
+Montr&#233;al, Qu&#233;bec, Canada
+H3A 2A7
+T: (514) 398-8206
+F: (514) 398-7348
+www.cim.mcgill.ca/~jay
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20070227/89b9a685/attachment.html">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20070227/89b9a685/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000062.html">[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#63">[ date ]</a>
+              <a href="thread.html#63">[ thread ]</a>
+              <a href="subject.html#63">[ subject ]</a>
+              <a href="author.html#63">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

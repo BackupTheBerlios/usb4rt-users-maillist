@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] URBs and data
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20URBs%20and%20data&In-Reply-To=%3C20060515160003.70386.qmail%40web32704.mail.mud.yahoo.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000027.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] URBs and data</H1>
+    <B>Cedric Herreman</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20URBs%20and%20data&In-Reply-To=%3C20060515160003.70386.qmail%40web32704.mail.mud.yahoo.com%3E"
+       TITLE="[Usb4rt-users] URBs and data">glocker50 at yahoo.com
+       </A><BR>
+    <I>Mon May 15 18:00:03 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000027.html">[Usb4rt-users] URBs and data
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#26">[ date ]</a>
+              <a href="thread.html#26">[ thread ]</a>
+              <a href="subject.html#26">[ subject ]</a>
+              <a href="author.html#26">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hello,
+ 
+ I have a question regarding correct usage of the usb4rt API.
+ 
+ In the demo application rt_usb_ping, 16 URBs are created and registered. In the task there are sent cyclically with function call rt_usb_send_ctrl_msg. This URB requests the device descriptor. 
+ 
+ Would it be also possible for that demo to create and register one URB, and call the function rt_usb_send_ctrl_msg several times ? Sending the same URB over and over again ? Ofcourse, the p_transfer_buffer of the URB would be overwritten every time.
+ 
+ In my application i have to upload a file in chunks of 64 bytes to the device. The total file is approx 81 392 bytes, which makes approx 1280 x 64 bytes. Can i use one URB for this ? And overwrite the p_transfer_buffer every time with the new 64 bytes of data ?
+ 
+ Thanks for help.
+ 
+ Cedric.
+ 
+			
+---------------------------------
+Yahoo! Mail goes everywhere you do.  Get it on your phone.
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060515/6143cfec/attachment.html">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060515/6143cfec/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000027.html">[Usb4rt-users] URBs and data
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#26">[ date ]</a>
+              <a href="thread.html#26">[ thread ]</a>
+              <a href="subject.html#26">[ subject ]</a>
+              <a href="author.html#26">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

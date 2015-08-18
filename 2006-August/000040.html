@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] usb4rt for xenomai 2.2.0
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20for%20xenomai%202.2.0&In-Reply-To=%3C44E5BC40.4040703%40cim.mcgill.ca%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000039.html">
+   <LINK REL="Next"  HREF="000041.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] usb4rt for xenomai 2.2.0</H1>
+    <B>Jerome Pasquero</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20for%20xenomai%202.2.0&In-Reply-To=%3C44E5BC40.4040703%40cim.mcgill.ca%3E"
+       TITLE="[Usb4rt-users] usb4rt for xenomai 2.2.0">jay at cim.mcgill.ca
+       </A><BR>
+    <I>Fri Aug 18 15:10:24 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000039.html">[Usb4rt-users] usb4rt for xenomai 2.2.0
+</A></li>
+        <LI>Next message: <A HREF="000041.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#40">[ date ]</a>
+              <a href="thread.html#40">[ thread ]</a>
+              <a href="subject.html#40">[ subject ]</a>
+              <a href="author.html#40">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>FYI:
+
+On  my Dell laptop inspiron 600m, the video driver labeled <A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">radeon at pci</A> 
+(from cat /proc/interrupts) was interacting with the module 
+rt_uhci_hcd.ko and my system was freezing
+Unfortunately, the module for the radeon could not be unloaded because 
+it was in use.
+
+To fix the IRQ conflict, one needs to recompile the kernel, making sure 
+that any reference to the radeon in the .config file is commented out.
+
+I am not sure of what <A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">radeon at pci</A> does exactly because my laptop's video 
+card seems to be working just fine without it...
+
+On a desktop, this type of IRQ conflict with a video card can sometimes 
+be fixed by simply switching the video card to another PCI slot (I tried 
+on a desktop computer and it worked).
+
+thanks for your help Jan
+
+cheers
+
+-jerome
+
+
+
+
+-- 
+No virus found in this outgoing message.
+Checked by AVG Free Edition.
+Version: 7.1.405 / Virus Database: 268.11.2/422 - Release Date: 8/17/2006
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000039.html">[Usb4rt-users] usb4rt for xenomai 2.2.0
+</A></li>
+	<LI>Next message: <A HREF="000041.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#40">[ date ]</a>
+              <a href="thread.html#40">[ thread ]</a>
+              <a href="subject.html#40">[ subject ]</a>
+              <a href="author.html#40">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

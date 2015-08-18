@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] error inserting rt_uhci_hcd.ko
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2008-July/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20error%20inserting%20rt_uhci_hcd.ko&In-Reply-To=%3C1216127913.487ca3a910d31%40imp.free.fr%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000073.html">
+   <LINK REL="Next"  HREF="000075.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] error inserting rt_uhci_hcd.ko</H1>
+    <B>nourry at free.fr</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20error%20inserting%20rt_uhci_hcd.ko&In-Reply-To=%3C1216127913.487ca3a910d31%40imp.free.fr%3E"
+       TITLE="[Usb4rt-users] error inserting rt_uhci_hcd.ko">nourry at free.fr
+       </A><BR>
+    <I>Tue Jul 15 15:18:33 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000073.html">[Usb4rt-users] error inserting rt_uhci_hcd.ko
+</A></li>
+        <LI>Next message: <A HREF="000075.html">[Usb4rt-users] error inserting rt_uhci_hcd.ko
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>&gt;&gt;<i> &quot;rmmod ehci-hcd uhci-hcd&quot; didn't work properly.
+</I>&gt;<i> What does that mean exactly? Did rmmod fail? If yes, which error message
+</I>&gt;<i> was printed?
+</I>
+
+rmmod works (on both distributions) but on Ubuntu it fails to remove one of the
+two modules (surely inexistant, don't remember which one, i'll tell you, i'm on
+mandriva for the moment). So i couldn't continue with inserting rt_usbcore.ko.
+
+On Mandriva, this command works as expected, but i fail to insert
+rt_uhci_hcd.ko.
+
+
+&gt;<i> Could you please post all messages printed to the kernel log by the
+</I>&gt;<i> USB4RT-modules?
+</I>
+
+#after &quot;rmmod ehci-hcd uhci-hcd&quot; :
+
+usb 3-1: USB disconnect, address 2
+ehci_hcd 0000:00:03.3: remove, state 1
+usb usb1: USB disconnect, address 1
+ehci_hcd 0000:00:03.3: USB bus 1 deregistered
+
+#after inserting a usb key :
+
+usb 2-1: new full speed USB device using ohci_hcd and address 2
+usb 2-1: configuration #1 chosen from 1 choice
+SCSI subsystem initialized
+Initializing USB Mass Storage driver...
+scsi0 : SCSI emulation for USB Mass Storage devices
+usbcore: registered new interface driver usb-storage
+USB Mass Storage support registered.
+usb-storage: device found at 2
+usb-storage: waiting for device to settle before scanning
+scsi 0:0:0:0: Direct-Access     Sony     Storage Media    0100 PQ: 0 ANSI: 0 CCS
+usb-storage: device scan complete
+Driver 'sd' needs updating - please use bus_type methods
+sd 0:0:0:0: [sda] 1014784 512-byte hardware sectors (520 MB)
+sd 0:0:0:0: [sda] Write Protect is off
+sd 0:0:0:0: [sda] Mode Sense: 43 00 00 00
+sd 0:0:0:0: [sda] Assuming drive cache: write through
+sd 0:0:0:0: [sda] 1014784 512-byte hardware sectors (520 MB)
+sd 0:0:0:0: [sda] Write Protect is off
+sd 0:0:0:0: [sda] Mode Sense: 43 00 00 00
+sd 0:0:0:0: [sda] Assuming drive cache: write through
+ sda: sda1
+sd 0:0:0:0: [sda] Attached SCSI removable disk
+sd 0:0:0:0: Attached scsi generic sg0 type 0
+
+
+#after &quot;insmod rt_usbcore.ko&quot; :
+
+********** Realtime USB-Core Module 0.0.5 ***********
+RT-USBCORE: Max 16 Controller
+RT-USBCORE: Max 128 USB-Devices
+RT-USBCORE: Common debugging: enabled
+RT-USBCORE: Queue head debugging: disabled
+RT-USBCORE: Transfer descriptor debugging: disabled
+RT-USBCORE: Time debugging: enabled
+RT-USBCORE: URB 0xd9973e40 created (152 Byte)
+RT-USBCORE: 152 Byte allocated (+ 152 Byte)
+RT-USBCORE: URB 0xd9973e40: Control-Request created (8 Byte)
+RT-USBCORE: 160 Byte allocated (+ 8 Byte)
+RT-USBCORE: URB 0xd99739c0 created (152 Byte)
+RT-USBCORE: 312 Byte allocated (+ 152 Byte)
+RT-USBCORE: URB 0xd99739c0: Control-Request created (8 Byte)
+RT-USBCORE: 320 Byte allocated (+ 8 Byte)
+RT-USBCORE: URB 0xd9973a80 created (152 Byte)
+RT-USBCORE: 472 Byte allocated (+ 152 Byte)
+RT-USBCORE: URB 0xd9973a80: Control-Request created (8 Byte)
+RT-USBCORE: 480 Byte allocated (+ 8 Byte)
+RT-USBCORE: URB 0xd9973f00 created (152 Byte)
+RT-USBCORE: 632 Byte allocated (+ 152 Byte)
+RT-USBCORE: URB 0xd9973f00: Control-Request created (8 Byte)
+RT-USBCORE: 640 Byte allocated (+ 8 Byte)
+RT-USBCORE: Control-URB @ 0xd9973e40 with  8 Byte Packet-Size
+RT-USBCORE: Control-URB @ 0xd99739c0 with 16 Byte Packet-Size
+RT-USBCORE: Control-URB @ 0xd9973a80 with 32 Byte Packet-Size
+RT-USBCORE: Control-URB @ 0xd9973f00 with 64 Byte Packet-Size
+RT-USBCORE: Initialize Hub-List
+RT-USBCORE: Initialize Controller-List
+RT-USBCORE: Loading Completed (640 Byte allocated)
+
+#after &quot;insmod rt_uhci_hcd.ko&quot; : returns &quot;insmod: error inserting
+'rt_uhci_hcd.ko': -1 No such device&quot;
+
+********* Realtime Driver for Universal Host Controller 0.0.5 **********
+RT-UHC-Driver: Searching for Universal-Host-Controller
+RT-UHC-Driver: No UHC-Driver registered -&gt; Exit Module
+
+
+After the removal of ehci-hcd &amp; uhci-hcd modules, the usb key is still detected,
+is this normal ?
+
+Many thanks,
+Antoine
+
+
+----- Fin du message transf&#233;r&#233; -----
+
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000073.html">[Usb4rt-users] error inserting rt_uhci_hcd.ko
+</A></li>
+	<LI>Next message: <A HREF="000075.html">[Usb4rt-users] error inserting rt_uhci_hcd.ko
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] Error inserting rt_uhci_hcd.ko &amp; rt_ftdi_sio.ko
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2009-October/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Error%20inserting%20rt_uhci_hcd.ko%20%26%20rt_ftdi_sio.ko&In-Reply-To=%3C4AD2CFE9.5030603%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000087.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] Error inserting rt_uhci_hcd.ko &amp; rt_ftdi_sio.ko</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Error%20inserting%20rt_uhci_hcd.ko%20%26%20rt_ftdi_sio.ko&In-Reply-To=%3C4AD2CFE9.5030603%40web.de%3E"
+       TITLE="[Usb4rt-users] Error inserting rt_uhci_hcd.ko &amp; rt_ftdi_sio.ko">jan.kiszka at web.de
+       </A><BR>
+    <I>Mon Oct 12 08:42:49 CEST 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000087.html">[Usb4rt-users] Error inserting rt_uhci_hcd.ko &amp; rt_ftdi_sio.ko
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#88">[ date ]</a>
+              <a href="thread.html#88">[ thread ]</a>
+              <a href="subject.html#88">[ subject ]</a>
+              <a href="author.html#88">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Rub&#233;n Gonz&#225;lez del Pozo wrote:
+&gt;<i> Hello,
+</I>&gt;<i> I installed the last version of USB4RT from SVN repository on a Mac Mini
+</I>&gt;<i> (only 4 USB ports) with Ubuntu 8.04 (2.6.30) and Xenomai 2.4.9.1.
+</I>&gt;<i> I had a problem inserting rt_uhci_hcd.ko and rt_ftdi_sio.ko.
+</I>&gt;<i> 
+</I>&gt;<i> The messages printed by the modules are:
+</I>&gt;<i> 
+</I>&gt;<i> - after &quot;insmod rt_usbcore.ko&quot;:
+</I>&gt;<i> 
+</I>&gt;<i> ********** Realtime USB-Core Module 0.0.5 ***********
+</I>&gt;<i> RT-USBCORE: Max 16 Controller
+</I>&gt;<i> RT-USBCORE: Max 128 USB-Devices
+</I>&gt;<i> RT-USBCORE: Common debugging: enabled
+</I>&gt;<i> RT-USBCORE: Queue head debugging: disabled
+</I>&gt;<i> RT-USBCORE: Transfer descriptor debugging: disabled
+</I>&gt;<i> RT-USBCORE: Time debugging: enabled
+</I>&gt;<i> RT-USBCORE: URB 0xef198f00 created (236 Byte)
+</I>&gt;<i> RT-USBCORE: 236 Byte allocated (+ 236 Byte)
+</I>&gt;<i> RT-USBCORE: URB 0xef198f00: Control-Request created (8 Byte)
+</I>&gt;<i> RT-USBCORE: 244 Byte allocated (+ 8 Byte)
+</I>&gt;<i> RT-USBCORE: URB 0xef198400 created (236 Byte)
+</I>&gt;<i> RT-USBCORE: 480 Byte allocated (+ 236 Byte)
+</I>&gt;<i> RT-USBCORE: URB 0xef198400: Control-Request created (8 Byte)
+</I>&gt;<i> RT-USBCORE: 488 Byte allocated (+ 8 Byte)
+</I>&gt;<i> RT-USBCORE: URB 0xef198900 created (236 Byte)
+</I>&gt;<i> RT-USBCORE: 724 Byte allocated (+ 236 Byte)
+</I>&gt;<i> RT-USBCORE: URB 0xef198900: Control-Request created (8 Byte)
+</I>&gt;<i> RT-USBCORE: 732 Byte allocated (+ 8 Byte)
+</I>&gt;<i> RT-USBCORE: URB 0xef198500 created (236 Byte)
+</I>&gt;<i> RT-USBCORE: 968 Byte allocated (+ 236 Byte)
+</I>&gt;<i> RT-USBCORE: URB 0xef198500: Control-Request created (8 Byte)
+</I>&gt;<i> RT-USBCORE: 976 Byte allocated (+ 8 Byte)
+</I>&gt;<i> RT-USBCORE: Control-URB @ 0xef198f00 with  8 Byte Packet-Size
+</I>&gt;<i> RT-USBCORE: Control-URB @ 0xef198400 with 16 Byte Packet-Size
+</I>&gt;<i> RT-USBCORE: Control-URB @ 0xef198900 with 32 Byte Packet-Size
+</I>&gt;<i> RT-USBCORE: Control-URB @ 0xef198500 with 64 Byte Packet-Size
+</I>&gt;<i> RT-USBCORE: Initialize Hub-List
+</I>&gt;<i> RT-USBCORE: Initialize Controller-List
+</I>&gt;<i> RT-USBCORE: Loading Completed (976 Byte allocated)
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> - after &quot;insmod rt_uhci_hcd.ko&quot;:
+</I>&gt;<i> 
+</I>&gt;<i> CONSOLE:
+</I>&gt;<i> 
+</I>&gt;<i> insmod: error inserting 'rt_uhci_hcd.ko': -1 Unknown symbol in module
+</I>&gt;<i> 
+</I>&gt;<i> KERNEL:
+</I>&gt;<i> 
+</I>&gt;<i> rt_uhci_hcd: no symbol version for nrt_hcd_unregister_driver
+</I>&gt;<i> rt_uhci_hcd: Unknown symbol nrt_hcd_unregister_driver
+</I>&gt;<i> rt_uhci_hcd: no symbol version for nrt_hcd_register_driver
+</I>&gt;<i> rt_uhci_hcd: Unknown symbol nrt_hcd_register_driver
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> - after &quot;insmod rt_ftdi_sio.ko&quot;:
+</I>&gt;<i> 
+</I>&gt;<i> CONSOLE:
+</I>&gt;<i> 
+</I>&gt;<i> insmod: error inserting 'rt_ftdi_sio.ko': -1 Unknown symbol in module
+</I>&gt;<i> 
+</I>&gt;<i> KERNEL:
+</I>&gt;<i> 
+</I>&gt;<i> rt_ftdi_sio: no symbol version for nrt_usb_unregister_urb
+</I>&gt;<i> rt_ftdi_sio: Unknown symbol nrt_usb_unregister_urb
+</I>&gt;<i> rt_ftdi_sio: no symbol version for rt_usb_get_device
+</I>&gt;<i> rt_ftdi_sio: Unknown symbol rt_usb_get_device
+</I>&gt;<i> rt_ftdi_sio: no symbol version for rt_usb_put_device
+</I>&gt;<i> rt_ftdi_sio: Unknown symbol rt_usb_put_device
+</I>&gt;<i> rt_ftdi_sio: no symbol version for nrt_usb_register_urb
+</I>&gt;<i> rt_ftdi_sio: Unknown symbol nrt_usb_register_urb
+</I>&gt;<i> rt_ftdi_sio: no symbol version for nrt_usb_create_ctrl_semaphore_urb
+</I>&gt;<i> rt_ftdi_sio: Unknown symbol nrt_usb_create_ctrl_semaphore_urb
+</I>&gt;<i> rt_ftdi_sio: no symbol version for nrt_usb_destroy_ctrl_semaphore_urb
+</I>&gt;<i> rt_ftdi_sio: Unknown symbol nrt_usb_destroy_ctrl_semaphore_urb
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> What's the problem?
+</I>&gt;<i> Thank you very much,
+</I>&gt;<i> 
+</I>
+The build system of usb4rt is buggy, failing to collect the symbols of
+modules others depend on (strange, I thought it was derived from RTnet
+where this more or less works...). You should be able to work around it
+by disabling CONFIG_MODVERSIONS.
+
+Jan
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 257 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20091012/58afcb8b/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20091012/58afcb8b/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000087.html">[Usb4rt-users] Error inserting rt_uhci_hcd.ko &amp; rt_ftdi_sio.ko
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#88">[ date ]</a>
+              <a href="thread.html#88">[ thread ]</a>
+              <a href="subject.html#88">[ subject ]</a>
+              <a href="author.html#88">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

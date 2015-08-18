@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB4RT and PCI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB4RT%20and%20PCI&In-Reply-To=%3C20051108111443.53437.qmail%40web32705.mail.mud.yahoo.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000017.html">
+   <LINK REL="Next"  HREF="000019.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB4RT and PCI</H1>
+    <B>Cedric Herreman</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB4RT%20and%20PCI&In-Reply-To=%3C20051108111443.53437.qmail%40web32705.mail.mud.yahoo.com%3E"
+       TITLE="[Usb4rt-users] USB4RT and PCI">glocker50 at yahoo.com
+       </A><BR>
+    <I>Tue Nov  8 12:14:43 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000017.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+        <LI>Next message: <A HREF="000019.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#18">[ date ]</a>
+              <a href="thread.html#18">[ thread ]</a>
+              <a href="subject.html#18">[ subject ]</a>
+              <a href="author.html#18">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>--- Jan Kiszka &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">kiszka at rts.uni-hannover.de</A>&gt; wrote:
+
+&gt;<i> Cedric Herreman wrote:
+</I>&gt;<i> &gt; Thanks for the suggestion. This BIOS version does
+</I>&gt;<i> not
+</I>&gt;<i> &gt; allow me to disable the Ethernet ports on the
+</I>&gt;<i> board. I
+</I>&gt;<i> &gt; experimented with some settings but had no
+</I>&gt;<i> improvement
+</I>&gt;<i> &gt; for the moment.
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; I tried loading the user space drivers. This
+</I>&gt;<i> works,
+</I>&gt;<i> &gt; dmesg shows me the vendor ID and product ID of the
+</I>&gt;<i> &gt; only attached device. I do not have this Host
+</I>&gt;<i> System
+</I>&gt;<i> &gt; Error with the user space drivers. 
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; An IRQ conflict would give me problems in user
+</I>&gt;<i> space
+</I>&gt;<i> &gt; also, i suppose ?
+</I>&gt;<i> &gt; 
+</I>&gt;<i> 
+</I>&gt;<i> It will. But did you try to figure out if there is
+</I>&gt;<i> actually such a
+</I>&gt;<i> conflict? What does /proc/interrupts tell you when
+</I>&gt;<i> both Ethernet and USB
+</I>&gt;<i> is handled by normal Linux drivers?
+</I>&gt;<i> 
+</I>&gt;<i> Jan
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>
+There was indeed a conflict, both USB HC and Realtek
+NIC used interrupt 9.
+&quot;lspci -v&quot; showed me that the two USB host controllers
+use IRQ9 and that the Ethernet controller also uses
+IRQ9.
+
+I did a modprobe -r to remove the Ethernet drivers
+(mii,8139too). Shouldn't this solve the problem then ?
+Still i get &quot;Host System Errors&quot;. 
+
+Can there be a conflict with PCI/DMA memory allocation
+?
+
+Cedric.
+
+
+
+
+	
+		
+__________________________________ 
+Yahoo! Mail - PC Magazine Editors' Choice 2005 
+<A HREF="http://mail.yahoo.com">http://mail.yahoo.com</A>
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000017.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+	<LI>Next message: <A HREF="000019.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#18">[ date ]</a>
+              <a href="thread.html#18">[ thread ]</a>
+              <a href="subject.html#18">[ subject ]</a>
+              <a href="author.html#18">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

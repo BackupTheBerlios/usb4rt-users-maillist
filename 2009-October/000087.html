@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] Error inserting rt_uhci_hcd.ko &amp; rt_ftdi_sio.ko
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2009-October/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Error%20inserting%20rt_uhci_hcd.ko%20%26%20rt_ftdi_sio.ko&In-Reply-To=%3C57776.212.128.169.167.1255087221.squirrel%40correo.usal.es%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000088.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] Error inserting rt_uhci_hcd.ko &amp; rt_ftdi_sio.ko</H1>
+    <B>Rub&#233;n Gonz&#225;lez del Pozo</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Error%20inserting%20rt_uhci_hcd.ko%20%26%20rt_ftdi_sio.ko&In-Reply-To=%3C57776.212.128.169.167.1255087221.squirrel%40correo.usal.es%3E"
+       TITLE="[Usb4rt-users] Error inserting rt_uhci_hcd.ko &amp; rt_ftdi_sio.ko">rubengp at usal.es
+       </A><BR>
+    <I>Fri Oct  9 13:20:21 CEST 2009</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000088.html">[Usb4rt-users] Error inserting rt_uhci_hcd.ko &amp; rt_ftdi_sio.ko
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#87">[ date ]</a>
+              <a href="thread.html#87">[ thread ]</a>
+              <a href="subject.html#87">[ subject ]</a>
+              <a href="author.html#87">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hello,
+I installed the last version of USB4RT from SVN repository on a Mac Mini
+(only 4 USB ports) with Ubuntu 8.04 (2.6.30) and Xenomai 2.4.9.1.
+I had a problem inserting rt_uhci_hcd.ko and rt_ftdi_sio.ko.
+
+The messages printed by the modules are:
+
+- after &quot;insmod rt_usbcore.ko&quot;:
+
+********** Realtime USB-Core Module 0.0.5 ***********
+RT-USBCORE: Max 16 Controller
+RT-USBCORE: Max 128 USB-Devices
+RT-USBCORE: Common debugging: enabled
+RT-USBCORE: Queue head debugging: disabled
+RT-USBCORE: Transfer descriptor debugging: disabled
+RT-USBCORE: Time debugging: enabled
+RT-USBCORE: URB 0xef198f00 created (236 Byte)
+RT-USBCORE: 236 Byte allocated (+ 236 Byte)
+RT-USBCORE: URB 0xef198f00: Control-Request created (8 Byte)
+RT-USBCORE: 244 Byte allocated (+ 8 Byte)
+RT-USBCORE: URB 0xef198400 created (236 Byte)
+RT-USBCORE: 480 Byte allocated (+ 236 Byte)
+RT-USBCORE: URB 0xef198400: Control-Request created (8 Byte)
+RT-USBCORE: 488 Byte allocated (+ 8 Byte)
+RT-USBCORE: URB 0xef198900 created (236 Byte)
+RT-USBCORE: 724 Byte allocated (+ 236 Byte)
+RT-USBCORE: URB 0xef198900: Control-Request created (8 Byte)
+RT-USBCORE: 732 Byte allocated (+ 8 Byte)
+RT-USBCORE: URB 0xef198500 created (236 Byte)
+RT-USBCORE: 968 Byte allocated (+ 236 Byte)
+RT-USBCORE: URB 0xef198500: Control-Request created (8 Byte)
+RT-USBCORE: 976 Byte allocated (+ 8 Byte)
+RT-USBCORE: Control-URB @ 0xef198f00 with  8 Byte Packet-Size
+RT-USBCORE: Control-URB @ 0xef198400 with 16 Byte Packet-Size
+RT-USBCORE: Control-URB @ 0xef198900 with 32 Byte Packet-Size
+RT-USBCORE: Control-URB @ 0xef198500 with 64 Byte Packet-Size
+RT-USBCORE: Initialize Hub-List
+RT-USBCORE: Initialize Controller-List
+RT-USBCORE: Loading Completed (976 Byte allocated)
+
+
+- after &quot;insmod rt_uhci_hcd.ko&quot;:
+
+CONSOLE:
+
+insmod: error inserting 'rt_uhci_hcd.ko': -1 Unknown symbol in module
+
+KERNEL:
+
+rt_uhci_hcd: no symbol version for nrt_hcd_unregister_driver
+rt_uhci_hcd: Unknown symbol nrt_hcd_unregister_driver
+rt_uhci_hcd: no symbol version for nrt_hcd_register_driver
+rt_uhci_hcd: Unknown symbol nrt_hcd_register_driver
+
+
+- after &quot;insmod rt_ftdi_sio.ko&quot;:
+
+CONSOLE:
+
+insmod: error inserting 'rt_ftdi_sio.ko': -1 Unknown symbol in module
+
+KERNEL:
+
+rt_ftdi_sio: no symbol version for nrt_usb_unregister_urb
+rt_ftdi_sio: Unknown symbol nrt_usb_unregister_urb
+rt_ftdi_sio: no symbol version for rt_usb_get_device
+rt_ftdi_sio: Unknown symbol rt_usb_get_device
+rt_ftdi_sio: no symbol version for rt_usb_put_device
+rt_ftdi_sio: Unknown symbol rt_usb_put_device
+rt_ftdi_sio: no symbol version for nrt_usb_register_urb
+rt_ftdi_sio: Unknown symbol nrt_usb_register_urb
+rt_ftdi_sio: no symbol version for nrt_usb_create_ctrl_semaphore_urb
+rt_ftdi_sio: Unknown symbol nrt_usb_create_ctrl_semaphore_urb
+rt_ftdi_sio: no symbol version for nrt_usb_destroy_ctrl_semaphore_urb
+rt_ftdi_sio: Unknown symbol nrt_usb_destroy_ctrl_semaphore_urb
+
+
+What's the problem?
+Thank you very much,
+
+-- 
+Rub&#233;n Gonz&#225;lez del Pozo
+<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">rubengp at usal.es</A>
+University of Salamanca
+Spain
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000088.html">[Usb4rt-users] Error inserting rt_uhci_hcd.ko &amp; rt_ftdi_sio.ko
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#87">[ date ]</a>
+              <a href="thread.html#87">[ thread ]</a>
+              <a href="subject.html#87">[ subject ]</a>
+              <a href="author.html#87">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] RT_SEM &amp; Blocking urbs
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2008-September/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20RT_SEM%20%26%20Blocking%20urbs&In-Reply-To=%3C48C64DE9.3090505%40free.fr%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] RT_SEM &amp; Blocking urbs</H1>
+    <B>Antoine Nourry</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20RT_SEM%20%26%20Blocking%20urbs&In-Reply-To=%3C48C64DE9.3090505%40free.fr%3E"
+       TITLE="[Usb4rt-users] RT_SEM &amp; Blocking urbs">nourry at free.fr
+       </A><BR>
+    <I>Tue Sep  9 12:20:25 CEST 2008</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#82">[ date ]</a>
+              <a href="thread.html#82">[ thread ]</a>
+              <a href="subject.html#82">[ subject ]</a>
+              <a href="author.html#82">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi,
+I wanted to know exactly the purpose of the semaphore created with the 
+urbs. It seems to be woken up
+by an interrupt (blocking urbs) when the urb is sent, but since i need 
+realtime AND very low execution times i tried to turn MAX_WAIT_TIME urb 
+parameter to 0. I get RT_SEM timed out but i still can send and receive 
+data. However if i do no wait for some microseconds until unregistering 
+the sent urb, i get &quot;rt_sem is a deleted semaphore descriptor&quot; (it is 
+deleted before being woken up). By the way what are the advantages of 
+each solution : blocking and callback ?
+
+I need to send a long sequence of commands under 1ms each (so each 
+command must be completed in order). I only use two urbs (out &amp; in) 
+allocated in the open device function of an rtdm driver. Only one is 
+registered at once (semaphore created and nrt_usb_register). If i try to 
+register several urbs, the system crashes. Is it normal ?
+
+Since only the rt_send_urb is in realtime context, how can we be sure to 
+get determinist behaviour ? Or maybe for this non realtime part (buffer 
+copy and registering) must we rely on the maximum latency in an 
+overloaded context ? Am i doing the things the good way ?
+
+Many Thanks ,
+Antoine
+
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#82">[ date ]</a>
+              <a href="thread.html#82">[ thread ]</a>
+              <a href="subject.html#82">[ subject ]</a>
+              <a href="author.html#82">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] usb4rt for xenomai 2.2.0
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20for%20xenomai%202.2.0&In-Reply-To=%3C44E08B03.7090803%40cim.mcgill.ca%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000038.html">
+   <LINK REL="Next"  HREF="000040.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] usb4rt for xenomai 2.2.0</H1>
+    <B>Jerome Pasquero</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20for%20xenomai%202.2.0&In-Reply-To=%3C44E08B03.7090803%40cim.mcgill.ca%3E"
+       TITLE="[Usb4rt-users] usb4rt for xenomai 2.2.0">jay at cim.mcgill.ca
+       </A><BR>
+    <I>Mon Aug 14 16:38:59 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000038.html">[Usb4rt-users] usb4rt for xenomai 2.2.0
+</A></li>
+        <LI>Next message: <A HREF="000040.html">[Usb4rt-users] usb4rt for xenomai 2.2.0
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Jan Kiszka wrote:
+
+&gt;<i> Jerome Pasquero wrote:
+</I>&gt;<i>   
+</I>&gt;&gt;<i> thanks for the quick reply Jan,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> thanks to your modifications I am now able to compile and install the
+</I>&gt;&gt;<i> latest SVN  version of USB4RT.
+</I>&gt;&gt;<i> Unfortunately, when I try to load the module rt_uhci_hcd.ko to test
+</I>&gt;&gt;<i> everything as indicated in the README file, I get a system freeze.
+</I>&gt;&gt;<i> Loading the first module (rt_usbcore.ko) does not give me any problem.
+</I>&gt;&gt;<i> Only rt_uhci_hcd.ko does.
+</I>&gt;&gt;<i> I am trying to talk to my USB-mouse.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> My current configuration is the following:
+</I>&gt;&gt;<i> Ubuntu 6.0.6
+</I>&gt;&gt;<i> linux 2.6.15.6  with Xenomai 2.2.0
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Any idea what is going on?
+</I>&gt;&gt;<i>     
+</I>&gt;<i>
+</I>&gt;<i> Cannot say yet. First thing to check: is there some IRQ conflict between
+</I>&gt;<i> the UHCI and some Linux device. If yes, your freeze may be an endless
+</I>&gt;<i> loop due to this conflict. If not, could you try to capture the kernel
+</I>&gt;<i> output of your dying box via serial console or netconsole (see related
+</I>&gt;<i> description under linux/doc/)? Please post your findings to the list so
+</I>&gt;<i> that we can discuss publicly and file a potential solution for other
+</I>&gt;<i> users as well.
+</I>&gt;<i>
+</I>&gt;<i>   
+</I>You are right, it is most probably a conflict between the UHCI and some 
+other device. The problem is that I can't get linux to allocate a free 
+IRQ to UHCI.
+On my system, yenta, eth0, radeon and UHCI all share the same IRQ (See 
+below).
+
+output from &gt;&gt; cat /proc/interrupts
+
+0:      33423          XT-PIC  timer
+ 1:        141          XT-PIC  i8042
+ 2:          0          XT-PIC  cascade
+ 7:       1176          XT-PIC  ndiswrapper
+ 9:          2          XT-PIC  acpi
+11:       5880          XT-PIC  uhci_hcd:usb1, uhci_hcd:usb2, 
+uhci_hcd:usb3, ehci_hcd:usb4, yenta, yenta, eth0, <A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">radeon at pci</A>:0000:01:00.0
+12:        106          XT-PIC  i8042
+14:       8453          XT-PIC  ide0
+15:       1857          XT-PIC  ide1
+NMI:          0
+ERR:          0
+
+
+I am trying to run this thing on a Dell Inspiron Laptop 600m.
+
+- I can't modify the IRQ assignment in the bios (Dell latitude D600 
+version A16).
+- Disabling the serial port does not make any difference to the IRQ list.
+- I can't change any card from one PCI slot to another because it is a 
+laptop.
+- I've tried disabling acpi when loading the kernel (pci=noacpi noapic). 
+No success!
+- I've even tried to see if I could change the IRQ  through Windows (my 
+system is dual boot)... but it doesn't seem possible
+
+I am starting to run out of ideas...
+
+Now, is it still worth it to try to catch the kernel output through a 
+dying console? I will probably try tomorrow (I've never done it 
+before... rather new to this stuff). But I strongly suspect that there 
+is an IRQ conflict.
+
+Help is much appreciated.
+
+cheers
+
+-jerome
+
+
+&gt;&gt;<i> I would like to use usb4rt to control an Altera FPGA which is on a
+</I>&gt;&gt;<i> development board that supports USB.
+</I>&gt;&gt;<i> The current drivers that a friend of mine has developed for the board
+</I>&gt;&gt;<i> (Nova Eng. Constellation board) are not realtime.
+</I>&gt;&gt;<i>     
+</I>&gt;<i>
+</I>&gt;<i> I see, sounds good.
+</I>&gt;<i>
+</I>&gt;<i> Jan
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>   
+</I>
+
+
+
+-- 
+No virus found in this outgoing message.
+Checked by AVG Free Edition.
+Version: 7.1.405 / Virus Database: 268.10.10/418 - Release Date: 8/14/2006
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000038.html">[Usb4rt-users] usb4rt for xenomai 2.2.0
+</A></li>
+	<LI>Next message: <A HREF="000040.html">[Usb4rt-users] usb4rt for xenomai 2.2.0
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,444 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] problem with URB's transfer_buffer_length?
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20problem%20with%20URB%27s%20transfer_buffer_length%3F&In-Reply-To=%3C44FF59FD.5070500%40cim.mcgill.ca%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000049.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] problem with URB's transfer_buffer_length?</H1>
+    <B>Jerome Pasquero</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20problem%20with%20URB%27s%20transfer_buffer_length%3F&In-Reply-To=%3C44FF59FD.5070500%40cim.mcgill.ca%3E"
+       TITLE="[Usb4rt-users] problem with URB's transfer_buffer_length?">jay at cim.mcgill.ca
+       </A><BR>
+    <I>Thu Sep  7 01:30:05 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000049.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#48">[ date ]</a>
+              <a href="thread.html#48">[ thread ]</a>
+              <a href="subject.html#48">[ subject ]</a>
+              <a href="author.html#48">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi all,
+
+I am trying to convert a simple driver to make it work under USB4RT.  
+The device I am trying to interface with is an FPGA development board 
+for which Linux drivers have already been implemented and are functional.
+
+However, I cannot get it to work using USB4RT. For instance, I have 
+implemented a simple write function to the FPGA as follows. This code is 
+directly inspired from the RT_USB_PING example.
+
+int WriteByte(unsigned char addr, unsigned char data)
+{
+    struct rt_urb* p_urb_out;
+    int ret;
+    unsigned char buf[4];
+
+    // instructions for FPGA
+    buf[0] = CMD_WRITE_BYTE;       // 0x01
+    buf[1] = addr;            // addr on FPGA
+    buf[2] = 1;            // data size
+    buf[3] = data;
+    
+    p_urb_out = create_data_out_urb(p_device, 4);
+
+    if(!p_urb_out)
+       {
+        printk(&quot;THMB_RT: [ERROR] Creating DATA OUT URB for WriteByte\n&quot;);
+        return -1;
+    }
+   
+    memcpy(p_urb_out-&gt;p_transfer_buffer, buf, 4);
+    ret = rt_usb_send_urb_msg(p_urb_out); // blocking call for the moment
+   
+    destroy_urb(p_urb_out);
+   
+    if(ret &lt; 0)
+    {
+        printk(&quot;THMB_RT: [ERROR] Sending DATA OUT URB for WriteByte\n&quot;);
+        return - 1;
+    }
+
+   return 0;
+}
+
+struct rt_urb* create_data_out_urb(struct usb_device *p_dev, int 
+transferBufferSize)
+{
+    int ret = 0;
+    struct rt_urb* p_urb = NULL;
+    unsigned char* p_buffer = NULL;
+    unsigned int pipe;
+    pipe = usb_sndbulkpipe(p_dev, 0x01);
+    p_urb = create_urb(     p_dev,
+                pipe,        // out endpoint #1
+                0x0000,        // no transfer_flags required for bulk 
+transfer
+                NULL,         // since blocking call, no need for 
+callback function
+                MAX_WAIT_TIME);    // currently at 500ms
+
+    if(!p_urb)
+    {
+        printk(&quot;THMB-RT: [ERROR] DATA OUT URB could not be created  \n&quot;);
+        return NULL;
+    }
+    
+    p_buffer = kmalloc(transferBufferSize,GFP_ATOMIC);
+    if (!p_buffer)
+    {
+        printk(&quot;THMB-RT: [ERROR] No Memory for Buffer \n&quot;);
+        kfree(p_urb);
+        alloc_bytes -= sizeof(struct rt_urb);
+        return NULL;
+    }
+
+    alloc_bytes += transferBufferSize;
+    memset( p_buffer, 0, transferBufferSize);
+    p_urb-&gt;p_setup_packet = NULL; // only for ctrl urbs
+    p_urb-&gt;p_transfer_buffer = p_buffer;
+    p_urb-&gt;transfer_buffer_length = transferBufferSize;  
+    rtdm_sem_init (&amp;p_urb-&gt;rt_sem, 0);
+    
+    ret = nrt_usb_register_urb(p_urb);
+    if (ret)
+    {
+        printk(&quot;THMB-RT: [ERROR] Registering DATA OUT URB failed, code = 
+%d \n&quot;,ret);
+        kfree(p_urb);
+        alloc_bytes -= sizeof(struct rt_urb);
+        return NULL;
+    }
+    
+    return p_urb;
+}
+
+struct rt_urb *create_urb(    struct usb_device *p_dev,
+                unsigned int pipe,
+                unsigned int transfer_flags,
+                rt_usb_complete_t rt_complete_fkt,
+                int64_t rt_sem_timeout)
+{
+    struct rt_urb *p_urb = NULL;
+
+    p_urb = kmalloc(sizeof(struct rt_urb),GFP_ATOMIC);
+    if (!p_urb)
+    {
+        printk(&quot;THMB-RT: [ERROR] No Memory for URB \n&quot;);
+        return NULL;
+    }
+    
+    alloc_bytes += sizeof(struct rt_urb);
+    memset( p_urb, 0, sizeof(struct rt_urb) );
+
+    p_urb-&gt;transfer_flags = transfer_flags;
+    p_urb-&gt;p_usbdev = p_dev;
+    p_urb-&gt;p_hcd = p_dev-&gt;p_hcd;
+    p_urb-&gt;pipe = pipe;
+    p_urb-&gt;max_packet_size = usb_maxpacket(p_dev,pipe);
+    p_urb-&gt;max_buffer_len = MAX_URB_BUFFER_SIZE;
+    p_urb-&gt;rt_complete_fkt = rt_complete_fkt,
+    p_urb-&gt;rt_sem_timeout = rt_sem_timeout;
+   
+    rtdm_sem_init (&amp;p_urb-&gt;rt_sem, 0);
+
+    return p_urb;
+}
+
+void destroy_urb(struct rt_urb* p_urb)
+{
+    if(p_urb==NULL)
+        return;
+        
+    nrt_usb_unregister_urb(p_urb);
+    
+    rtdm_sem_destroy(&amp;p_urb-&gt;rt_sem);
+
+    if (p_urb-&gt;p_setup_packet)
+    {
+        kfree(p_urb-&gt;p_setup_packet);
+        alloc_bytes -= sizeof(struct usb_ctrlrequest);
+    }
+    
+    if (p_urb-&gt;p_transfer_buffer)
+    {
+        kfree(p_urb-&gt;p_transfer_buffer);
+        alloc_bytes -= p_urb-&gt;transfer_buffer_length;
+    }
+
+    kfree(p_urb);
+    alloc_bytes -= sizeof(struct rt_urb);
+}
+
+The code above does not seem to work. I know that I am writing to the 
+right endpoint and that I am sending the right instructions to the FPGA. 
+For the moment, and for the sake of this question, I am only trying to 
+control a LED on the development board. This requires a single WriteByte 
+call to a CMD_REGISTER on the FPGA which translates into 
+WriteByte(CMD_REGISTER, 0x02) - 0x02 is the instruction that tells the 
+development board to turn on the LED.
+
+If I change the URB's transfer_buffer_length from what it should be (in 
+this case, 4 bytes) to set it to any value above 64 (say 65), I am able 
+to turn on/off the LED. In order for this to work, I also need to set 
+the transfer_buffer_length to a value above 64 (btw, from dmesg: Max 
+Packet-Size 64 - I am guessing there is some kind of relation here, but 
+I am not sure...) .
+Unfortunately, by making the length of the transfer_buffer bigger than 
+it needs to be, I am probably also sending a bunch of junk to the 
+development board (anything after the 4th byte). When sending a single 
+byte at a time, it's not too much of a problem (as a proof, I can make 
+the LED flash), but since I also need to send blocks of data in series, 
+it becomes problematic.
+
+Why can't I set the transfer_buffer_length to what it should be?
+
+Is there something I am not understanding?
+
+Is the problem simply coming from the EZ-USB firmware and not USB4RT? I 
+suspect that's not the problem since I am able to properly communicate 
+with the EZ-USB chip when not using USB4RT (i.e. with the original driver).
+
+Help would be much appreciated
+
+cheers
+
+-jerome
+
+dmesg returns the following (in a case where transfer_buffer_length=4):
+
+[17181603.000000] --- DUMP USB-DEVICE @ e0c2a760 -------------------------
+[17181603.000000]  Number          : 1    
+[17181603.000000]  Vendor          : 0x08bf
+[17181603.000000]  Product         : 0x0000
+[17181603.000000]  Root-Hub-Port   : 0x00
+[17181603.000000]  Class           : 0xff
+[17181603.000000]  Subclass        : 0x00
+[17181603.000000]  Protocol        : 0x00
+[17181603.000000]  In use          : no    
+[17181603.000000]  Status          : 0x00
+[17181603.000000]  Speed           : 0x02
+[17181603.000000]  Host-Controller @ 0xccf4bf40  
+[17181603.000000]  
+[17181603.000000]  Endpoint         ---0 ---1 ---2 ---3 ---4 ---5 ---6 
+---7 ---8 ---9 --10 --11 --12 --13 --14 --15
+[17181603.000000]  Ctrl-Mask IN        X    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17181603.000000]  Ctrl-Mask OUT       X    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17181603.000000]  Bulk-Mask IN        -    X    X    X    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17181603.000000]  Bulk-Mask OUT       -    X    X    X    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17181603.000000]  Int-Mask IN         -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17181603.000000]  Int-Mask OUT        -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17181603.000000]  Iso-Mask IN         -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17181603.000000]  Iso-Mask OUT        -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17181603.000000]  Toggle-Mask IN      -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17181603.000000]  Toggle-Mask OUT     -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17181603.000000]  Max-Packet IN    0064 0064 0064 0064 0000 0000 0000 
+0000 0000 0000 0000 0000 0000 0000 0000 0000
+[17181603.000000]  Max-Packet OUT   0064 0064 0064 0064 0000 0000 0000 
+0000 0000 0000 0000 0000 0000 0000 0000 0000
+[17181603.000000] --- END USB-DEVICE --------------------------
+[17181603.000000] --- LIST USB-DEVICES -------------------------
+[17181603.000000]  No HCD VENDOR   PROD  CLS SCLS PROT -&gt;CTRL CTRL-&gt; 
+-&gt;BULK BULK-&gt;  -&gt;INT  INT-&gt; -&gt;ISOC ISOC-&gt; STATE SPEED USED
+[17181603.000000] 001 000 0x08bf 0x0000 0xff 0x00 0x00 0x0001 0x0001 
+0x000e 0x000e 0x0000 0x0000 0x0000 0x0000 00000 00002    -
+[17181603.000000] --- END USB-DEVICES --------------------------
+[17181603.000000] 000:00: Device found ... -&gt; No HUB
+[17181603.000000] 000:00: Root-Hub portscan complete
+[17181603.000000] 000:01: Root-Hub portscan start
+[17181603.000000] 000:01: No Device found
+[17181603.000000] USB Universal Host Controller found : Vendor = 0x8086, 
+Device = 0x24c4, IRQ = 11, IO-Port = 0x0000bf40 (32 Bytes)
+[17181603.000000] RT-UHC-Driver: Request IO-Port @ 0x0000bf40 (32 Byte) 
+for UHC[1] ... [OK]
+[17181603.000000] searching IRQ 11 in the IRQ-Table
+[17181603.000000] uhc_irq_tab[0].irq = 11
+[17181603.000000] Entry found, p_uhc_irq[0] @ 0xe0c179a0,
+[17181603.000000] RT-UHC-Driver: RTDM IRQ 11 registered yet, add UHC to 
+IRQ-List
+[17181603.000000] RT-UHC-Driver: Framelist    @ 0xd8cac000, DMA: 
+0x18cac000 (8196 Byte)
+[17181603.000000] RT-UHC-Driver: Creating TD @ 0xd689c000, DMA: 
+0x1689c000 (48 Byte)
+[17181603.000000] RT-UHC-Driver: Loop-TD      @ 0xd689c000, DMA: 0x1689c000
+[17181603.000000] RT-UHC-Driver: Skeleton initialized
+[17181603.000000] RT-UHC-Driver: Setting bus-master
+[17181603.000000] RT-UHC-Driver: Write framellist 0x18cac000
+[17181603.000000] RT-UHC-Driver: Setting framenumber to 0
+[17181603.000000] RT-UHC-Driver: Setting max-packet-size to 64
+[17181603.000000] RT-UHC-Driver: Turn off all Interrupts  
+[17181603.000000] RT-UHC-Driver: Setting ports into suspend-mode
+[17181603.000000] RT-UHC-Driver: Starte Host Controller
+[17181603.000000] RT-UHC-Driver: Write framellist 0x18cac000
+[17181603.000000] RT-UHC-Driver: Setting framenumber to 0
+[17181603.000000] RT-UHC-Driver: Turn on all Interrupts  
+[17181603.000000] RT-USBCORE: Register Host-Controller Driver
+[17181603.000000] RT-USBCORE: Get free HCD 1. Mask: 0x00000003
+[17181603.000000] RT-USBCORE: Host-Controller added to USB-Controller-List
+[17181603.000000] 001: USB Universal Host Controller @ 0xe0c178e0 
+registered
+[17181603.000000] 001: Searching for USB-Devices
+[17181603.000000] 001:00: Root-Hub portscan start
+[17181603.000000] 001:00: No Device found
+[17181603.000000] 001:01: Root-Hub portscan start
+[17181603.000000] 001:01: No Device found
+[17181603.000000] USB Universal Host Controller found : Vendor = 0x8086, 
+Device = 0x24c7, IRQ = 11, IO-Port = 0x0000bf20 (32 Bytes)
+[17181603.000000] RT-UHC-Driver: Request IO-Port @ 0x0000bf20 (32 Byte) 
+for UHC[2] ... [OK]
+[17181603.000000] searching IRQ 11 in the IRQ-Table
+[17181603.000000] uhc_irq_tab[0].irq = 11
+[17181603.000000] Entry found, p_uhc_irq[0] @ 0xe0c179a0,
+[17181603.000000] RT-UHC-Driver: RTDM IRQ 11 registered yet, add UHC to 
+IRQ-List
+[17181603.000000] RT-UHC-Driver: Framelist    @ 0xd8c68000, DMA: 
+0x18c68000 (8196 Byte)
+[17181603.000000] RT-UHC-Driver: Creating TD @ 0xd8275000, DMA: 
+0x18275000 (48 Byte)
+[17181603.000000] RT-UHC-Driver: Loop-TD      @ 0xd8275000, DMA: 0x18275000
+[17181603.000000] RT-UHC-Driver: Skeleton initialized
+[17181603.000000] RT-UHC-Driver: Setting bus-master
+[17181603.000000] RT-UHC-Driver: Write framellist 0x18c68000
+[17181603.000000] RT-UHC-Driver: Setting framenumber to 0
+[17181603.000000] RT-UHC-Driver: Setting max-packet-size to 64
+[17181603.000000] RT-UHC-Driver: Turn off all Interrupts  
+[17181603.000000] RT-UHC-Driver: Setting ports into suspend-mode
+[17181603.000000] RT-UHC-Driver: Starte Host Controller
+[17181603.000000] RT-UHC-Driver: Write framellist 0x18c68000
+[17181603.000000] RT-UHC-Driver: Setting framenumber to 0
+[17181603.000000] RT-UHC-Driver: Turn on all Interrupts  
+[17181603.000000] RT-USBCORE: Register Host-Controller Driver
+[17181603.000000] RT-USBCORE: Get free HCD 2. Mask: 0x00000007
+[17181603.000000] RT-USBCORE: Host-Controller added to USB-Controller-List
+[17181603.000000] 002: USB Universal Host Controller @ 0xe0c17920 
+registered
+[17181603.000000] 002: Searching for USB-Devices
+[17181603.000000] 002:00: Root-Hub portscan start
+[17181603.000000] 002:00: No Device found
+[17181603.000000] 002:01: Root-Hub portscan start
+[17181603.000000] 002:01: No Device found
+[17181603.000000] RT-UHC-Driver: Loading Completed (84 Byte allocated)
+[17181603.064000] RT-USBCORE: Driver is searching for Device with Vendor 
+= 0x08bf, Product = 0x0000
+[17181603.064000] --- LIST USB-DEVICES -------------------------
+[17181603.064000]  No HCD VENDOR   PROD  CLS SCLS PROT -&gt;CTRL CTRL-&gt; 
+-&gt;BULK BULK-&gt;  -&gt;INT  INT-&gt; -&gt;ISOC ISOC-&gt; STATE SPEED USED
+[17181603.064000] 001 000 0x08bf 0x0000 0xff 0x00 0x00 0x0001 0x0001 
+0x000e 0x000e 0x0000 0x0000 0x0000 0x0000 00000 00002    X
+[17181603.064000] --- END USB-DEVICES --------------------------
+[17181603.064000] RT-USBCORE: USB-Device[1] LOCKED
+[17181603.064000] THMB-RT: vendor = 0x08bf, product = 0x0000 found ...
+[17181603.064000] THMB-RT: USB-Device @ 0xe0c2a760
+[17181603.064000] THMB-RT: Host-Controller @ 0xccf4bf40
+[17181603.064000] 000: TD-Table for URB 0xde0137c0 created @ 0xc93e2000, 
+DMA: 0x093e2000 (288 Byte)
+[17181603.064000] 000: 6 free TDs for URB 0xde0137c0 available
+[17181603.064000] 000: URB @ 0xde0137c0 registered, 6 TDs, Max-Buffer: 
+256, Max-Packet-Size: 64
+[17181603.064000] URB Type: BULK, Address: 1, Pipe: OUT, Endpoint 1
+[17181603.064000] 000:00-001: URB 0xde0137c0: Max Packet-Size 64
+[17181603.064000] 000:00-001: URB 0xde0137c0: Max Transfer-Buffer-Length 256
+[17181603.064000] 000:00-001: URB 0xde0137c0: Transfer-Buffer-Length 4
+[17181603.064000] 000:00-001: URB 0xde0137c0: Transfer-Buffer 
+0xdfdafce0, NOT_DMA_MAPPED
+[17181603.064000] 000:00-001: URB 0xde0137c0: Blocking URB (Semaphore)
+[17181603.064000] 000:00-001: URB 0xde0137c0: Transfer-Buffer @ 
+0xdfdafce0 (4 Byte) mapped to DMA: 0x1fdafce0 [OUT]
+[17181603.064000] 000:00-001: URB 0xde0137c0: SLEEPING MAX 500000000 ns
+[17181603.064000] 000:00-001: URB 0xde0137c0: PURB_IN_PROGRESS
+[17181603.064000] Sending 4 Bytes: [0]: 0x01, [1]: 0x40
+[17181603.064000] ========== DUMP TD-TABLE @ 0xc93e2000 (6 TDs, 288 
+Byte) ===========
+[17181603.064000]    URB         @ 0xde0137c0
+[17181603.064000]    PRIVATE-URB @ 0xd0b65bc0
+[17181603.064000]    QH          @ 0xd8c9d000 , DMA: 0x18c9d000
+[17181603.064000] A    NR         TD        LINK      STATUS       
+TOKEN      BUFFER  ACT ACTLEN MAXLEN TYPE ERRCNT STALL DBUF BABL TIME 
+BITST SPD IOC NAK DT ADR EP LS
+[17181603.064000] *     0 0x093e2000  0x00000001  0x01800000  
+0x006081e1  0x1fdafce0    X      0      3   e1      0     -    -    -    
+-     -   -   X   -  0   1  1  -
+[17181603.064000] ========== END DUMP =========
+[17181603.064000] 000:00-001: URB 0xde0137c0: Add to QH-List
+[17181603.064000] 000:00-001: URB 0xde0137c0: ---SCHEDULE in 
+Full-Speed-List ---
+[17181603.064000] THMB_RT: started, 160 Byte allocated
+[17181603.064000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17181603.064000] UHC @ 0xe0c178a0: Checking for Interrupts
+[17181603.064000] UHC[0]: Handling
+[17181603.064000] 000: ===&gt; Incoming IRQ 11, COMPLETE
+[17181603.064000] 000:00-001: URB 0xde0137c0: COMPLETED
+[17181603.064000] 000:00-001: URB 0xde0137c0: HANDLING
+[17181603.064000] 000:00-001: URB 0xde0137c0: Wake up Driver
+[17181603.064000] UHC @ 0xe0c178e0: Checking for Interrupts
+[17181603.064000] UHC[1]: No state-bit set
+[17181603.064000] UHC @ 0xe0c17920: Checking for Interrupts
+[17181603.064000] UHC[2]: No state-bit set
+[17181603.064000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17181603.064000] 000:00-001: URB 0xde0137c0: RT_SEM waked up by ISR, 
+Sleeptime: (948219 ns)
+[17181603.064000] 000:00-001: URB 0xde0137c0: PURB_IN_HANDLE
+[17181603.064000] 000:00-001: URB 0xde0137c0: ---UNSCHEDULE from 
+Full-Speed-List ---
+[17181603.064000] 000:00-001: URB 0xde0137c0: Remove from QH-List
+[17181603.064000] 000:00-001: URB 0xde0137c0: 4 / 4 Byte sent
+[17181603.064000] 000:00-001: URB 0xde0137c0: Unmap Transfer-Buffer @ 
+0xdfdafce0 (4 Byte) from DMA: 0x1fdafce0
+[17181603.064000] 000:00-001: URB 0xde0137c0: Free TDs
+[17181603.064000] 000:00-001: URB 0xde0137c0: PURB_IDLE
+[17181603.064000] RT-UHC-Driver: Deleting TD-Table for URB 0xde0137c0 
+(288 Byte)
+[17181603.064000] 000: URB 0xde0137c0 unregistered
+
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000049.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#48">[ date ]</a>
+              <a href="thread.html#48">[ thread ]</a>
+              <a href="subject.html#48">[ subject ]</a>
+              <a href="author.html#48">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

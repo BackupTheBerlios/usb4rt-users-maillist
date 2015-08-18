@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] RT4USB max load with USB 1.1
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20RT4USB%20max%20load%20with%20USB%201.1&In-Reply-To=%3C43399E33.1010102%40langenberg-home.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000002.html">
+   <LINK REL="Next"  HREF="000004.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] RT4USB max load with USB 1.1</H1>
+    <B>Joerg Langenberg</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20RT4USB%20max%20load%20with%20USB%201.1&In-Reply-To=%3C43399E33.1010102%40langenberg-home.de%3E"
+       TITLE="[Usb4rt-users] RT4USB max load with USB 1.1">joerg at langenberg-home.de
+       </A><BR>
+    <I>Tue Sep 27 21:32:03 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000002.html">[Usb4rt-users] RT4USB max load with USB 1.1
+</A></li>
+        <LI>Next message: <A HREF="000004.html">[Usb4rt-users] USB4RT and 2.4 kernel , RTAI 3.0 ?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#3">[ date ]</a>
+              <a href="thread.html#3">[ thread ]</a>
+              <a href="subject.html#3">[ subject ]</a>
+              <a href="author.html#3">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman wrote:
+&gt;<i> I have an application where i want to read out images
+</I>&gt;<i> from a camera with size 100x100 pixels, every pixel
+</I>&gt;<i> has two bytes of data. 60 images per second should be
+</I>&gt;<i> read. This means there should be a transfer of 1.2
+</I>&gt;<i> Mbytes per second or 9.6 Mbit per second.
+</I>&gt;<i>
+</I>&gt;<i> The USB 1.1 supports speeds up to 12 Mbit/sec. Does it
+</I>&gt;<i> mean i can have 9.6 Mbit of data transferred ? Or is
+</I>&gt;<i> there also a considerable protocol overhead ? 
+</I>&gt;<i>   
+</I>The transfer rate depends on the transfer type and the endpoints in the
+camera. I think, there is a control endpoint to receive requests and a 
+bulk-in
+endpoint to receive the data from the camera.
+The control transfer uses a double handshake protocol, thus you have a 
+lot of
+overhead that additionally depends on the packet size.
+One control transfer is divided into three stages, the setup- the data- and
+the status stage. All data of the camera will be transmitted in the data 
+stage
+in one ore more data packets with a specific size.
+E.g.: 64 byte data, 8 byte packet size:
+21 Byte overhead in the setup stage,
+(64/8) x 13 = 104 byte overhead in the data stage,
+13 byte overhead in the setup stage
+==&gt; 138 byte overhead, 64 byte data
+The bulk transfer has no setup- and status stages. Every data packet has
+13 byte overhead, independent from the packet size.
+&gt;<i> If you use the full capacity of the USB, does it mean
+</I>&gt;<i> your processor is very busy copying data ? 
+</I>No, the host controller use the allocated memory of the host controller 
+driver
+and the usb driver directly over DMA.
+When the request (an URB with one or many transactions) was transfered 
+completely,
+the host controller generates an interrupt.
+&gt;<i> Or is the
+</I>&gt;<i> data buffered in the USB-controller ? So the processor
+</I>&gt;<i> can read it out every so many ms, and has some time
+</I>&gt;<i> left to process the data ?
+</I>&gt;<i>
+</I>&gt;<i> Cedric.
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i> 		
+</I>&gt;<i> __________________________________ 
+</I>&gt;<i> Yahoo! Mail - PC Magazine Editors' Choice 2005 
+</I>&gt;<i> <A HREF="http://mail.yahoo.com">http://mail.yahoo.com</A>
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> Usb4rt-users mailing list
+</I>&gt;<i> <A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">Usb4rt-users at lists.berlios.de</A>
+</I>&gt;<i> <A HREF="http://lists.berlios.de/mailman/listinfo/usb4rt-users">http://lists.berlios.de/mailman/listinfo/usb4rt-users</A>
+</I>&gt;<i>
+</I>&gt;<i>   
+</I>
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000002.html">[Usb4rt-users] RT4USB max load with USB 1.1
+</A></li>
+	<LI>Next message: <A HREF="000004.html">[Usb4rt-users] USB4RT and 2.4 kernel , RTAI 3.0 ?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#3">[ date ]</a>
+              <a href="thread.html#3">[ thread ]</a>
+              <a href="subject.html#3">[ subject ]</a>
+              <a href="author.html#3">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

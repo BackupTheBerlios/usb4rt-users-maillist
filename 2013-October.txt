@@ -1,0 +1,27 @@
+From patelilesh01 at gmail.com  Sat Oct 12 08:46:49 2013
+From: patelilesh01 at gmail.com (Ilesh Patel)
+Date: Sat, 12 Oct 2013 12:16:49 +0530
+Subject: [Usb4rt-users] usb4rt
+Message-ID: <CABSOR2gF34JqEkp0i5oy6Y2qO+FnPw2wqETEGRo7k8-LCU+JMw@mail.gmail.com>
+
+Hello,
+
+I want to build usb4rt with xenomai.
+I have tried it and follow the following steps and found some error
+
+./configure
+
+./configure: line 19801: /usr/realtime/fusion/bin/rtai-config: No such file
+or directory
+configure: error: *** Cannot identify DESTDIR
+rm: cannot remove `core': Is a directory
+
+
+So,Please help me how to compile it with Xenomai.
+
+Thanks & Regards,
+Ilesh
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: <https://lists.berlios.de/pipermail/usb4rt-users/attachments/20131012/7b9c0f4e/attachment.html>
+

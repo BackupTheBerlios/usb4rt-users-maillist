@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] intercepting the output of a mouse with usb4rt
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2007-June/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20intercepting%20the%20output%20of%20a%20mouse%20with%20usb4rt&In-Reply-To=%3Cd3623eab0706151144x44aba92fxddad69ec7214ce7e%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000065.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] intercepting the output of a mouse with usb4rt</H1>
+    <B>Jerome Pasquero</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20intercepting%20the%20output%20of%20a%20mouse%20with%20usb4rt&In-Reply-To=%3Cd3623eab0706151144x44aba92fxddad69ec7214ce7e%40mail.gmail.com%3E"
+       TITLE="[Usb4rt-users] intercepting the output of a mouse with usb4rt">jay at cim.mcgill.ca
+       </A><BR>
+    <I>Fri Jun 15 20:44:08 CEST 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000065.html">[Usb4rt-users] intercepting the output of a mouse with usb4rt
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#64">[ date ]</a>
+              <a href="thread.html#64">[ thread ]</a>
+              <a href="subject.html#64">[ subject ]</a>
+              <a href="author.html#64">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi,
+
+I was wondering if usb4rt in its current state supports interrupt transfers?
+I've had no success in intercepting the relative motions of a usb mouse.
+
+I based my code on, among other things, the rt_usb_ping example and on the
+usbmouse.c file found under linux but I cannot get my head around how it
+should work with usb4rt.
+Note that I am able to carry out bulk transfers - minus a few glitches
+already reported on this list earlier - on another device which supports it.
+But for some reason, I simply can't get to read the offset positions from a
+simple mouse.
+I am clearly missing something? Any idea what it could be?
+
+I apologize for how messy my code must look. For now I just wanted to check
+if I could read from a simple usb mouse.
+So I put together the following non-blocking call. But the callback function
+rt_callback_fkt is never handled... In other words, nothing happens.
+
+dmesg doesn't seem to report any problem.
+
+thanks for any help I can get
+
+-jerome
+
+
+struct rt_urb*  glb_p_urb;
+struct usb_device* glb_p_device;
+
+int init_module(void)
+{
+    int ret;
+
+    // open the USB device
+    ret = OpenDevice_(vendor, product);
+    if(ret)
+    {
+        PRNT_ERR_MSG_(&quot;ERROR in %s() -&gt; Cannot open device (code:%d).\n&quot;,
+__FUNCTION__, ret);
+        return ret;
+    }
+
+    // create the URB
+    ret = nrt_create_urb();
+    if(ret)
+    {
+        PRNT_ERR_MSG_(&quot;ERROR in %s() -&gt; Cannot create URBS (code:%d).\n&quot;,
+__FUNCTION__, ret);
+        return ret;
+    }
+
+    // start rt service_fct
+    ret = rt_task_spawn(&amp;glb.rtTask, TASK_NAME_, 4096, 99, T_FPU,
+&amp;service_fct, NULL);
+    if (ret)
+    {
+        PRNT_ERR_MSG_(&quot;ERROR in %s() -&gt; Cannot create task
+(code:%d).\n&quot;,__FUNCTION__, ret);
+        return ret;
+    }
+
+    PRNT_LOG_(&quot;Module started.\n&quot;);
+
+    return 0;
+}
+
+int OpenDevice_(__u16 vendor, __u16 product)
+{
+    glb_p_device = rt_usb_get_device(vendor, product, glb_p_device);
+    if (!glb_p_device)
+    {
+            PRNT_ERR_MSG_(&quot;ERROR in %s() -&gt; Device cannot be found.\n&quot;,
+__FUNCTION__);
+            return -ENODEV;
+    }
+
+    return 0;
+}
+
+void CloseDevice_()
+{
+    if(glb_p_device)
+        rt_usb_put_device(glb_p_device);
+    glb_p_device=NULL;
+}
+
+int nrt_create_urb()
+{
+    int ret = 0;
+    unsigned char* p_buffer = NULL;
+    unsigned int pipe;
+
+    pipe = usb_rcvintpipe(p_dev,EP_IN);
+
+    glb_p_urb = kmalloc(sizeof(struct rt_urb),GFP_ATOMIC);
+
+    if (!glb_p_urb)
+    {
+        PRNT_ERR_MSG_(&quot;ERROR in %s() -&gt; No Memory for URB.\n&quot;,
+__FUNCTION__);
+        return NULL;
+    }
+    memset(glb_p_urb, 0, sizeof(struct rt_urb) );
+
+    glb_p_urb-&gt;p_setup_packet = NULL;
+    glb_p_urb-&gt;transfer_flags = 0x0000;
+    glb_p_urb-&gt;p_usbdev = p_dev;
+    glb_p_urb-&gt;p_hcd = p_dev-&gt;p_hcd;
+    glb_p_urb-&gt;pipe = pipe;
+    glb_p_urb-&gt;max_packet_size = usb_maxpacket(glb_p_device,pipe);
+    glb_p_urb-&gt;max_buffer_len = 4;
+
+    glb_p_urb-&gt;rt_complete_fkt = rt_complete_fkt;
+    glb_p_urb-&gt;rt_sem_timeout = 0;
+
+    rtdm_sem_init (&amp;glb_p_urb-&gt;rt_sem, 0);
+
+    // error creating the URB!
+    if(!glb_p_urb)
+    {
+        PRNT_ERR_MSG_(&quot;ERROR in %s() -&gt; Creating URB.\n&quot;, __FUNCTION__);
+        return NULL;
+    }
+
+    p_buffer = kmalloc(4, GFP_ATOMIC);
+
+    if (!p_buffer)
+    {
+        PRNT_ERR_MSG_(&quot;ERROR in %s() -&gt; No memory available for transfer
+buffer.\n&quot;, __FUNCTION__);
+        kfree(p_urb);
+        return NULL;
+    }
+    memset( p_buffer, 0, 4);
+
+    // data buffer
+    glb_p_urb-&gt;p_transfer_buffer = p_buffer;
+    glb_p_urb-&gt;transfer_buffer_length = 4;
+
+    rtdm_sem_init (&amp;glb_p_urb-&gt;rt_sem, 0);
+
+    ret = nrt_usb_register_urb(glb_p_urb);
+
+    return ret;
+}
+
+void service_fct(void *p_data)
+{
+    char ret = 0;
+    char data[4];
+
+    ret = rt_usb_submit_urb(glb_p_urb);
+    if(ret)
+        printk(&quot;ERROR = %d\n&quot;, ret);
+
+}
+
+static void rt_callback_fkt(struct rt_urb *p_urb)
+{
+    char data[4];
+    int i;
+
+    memcpy(data, glb_p_urb-&gt;p_transfer_buffer, 4);
+    for(i=0; i&lt;4; i++)
+        printk(&quot;data[i]=%d %d\n&quot;,i, data[i]);
+}
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20070615/37b30323/attachment.html">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20070615/37b30323/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000065.html">[Usb4rt-users] intercepting the output of a mouse with usb4rt
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#64">[ date ]</a>
+              <a href="thread.html#64">[ thread ]</a>
+              <a href="subject.html#64">[ subject ]</a>
+              <a href="author.html#64">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

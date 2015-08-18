@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] URBs and data
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20URBs%20and%20data&In-Reply-To=%3C4468B0ED.5090409%40langenberg-home.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000026.html">
+   <LINK REL="Next"  HREF="000028.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] URBs and data</H1>
+    <B>Joerg Langenberg</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20URBs%20and%20data&In-Reply-To=%3C4468B0ED.5090409%40langenberg-home.de%3E"
+       TITLE="[Usb4rt-users] URBs and data">joerg at langenberg-home.de
+       </A><BR>
+    <I>Mon May 15 18:48:45 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000026.html">[Usb4rt-users] URBs and data
+</A></li>
+        <LI>Next message: <A HREF="000028.html">[Usb4rt-users] disabling DEBUG messages
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman wrote:
+&gt;<i> Hello,
+</I>&gt;<i>
+</I>&gt;<i> I have a question regarding correct usage of the usb4rt API.
+</I>&gt;<i>
+</I>&gt;<i> In the demo application rt_usb_ping, 16 URBs are created and
+</I>&gt;<i> registered. In the task there are sent cyclically with function call
+</I>&gt;<i> rt_usb_send_ctrl_msg. This URB requests the device descriptor.
+</I>&gt;<i>
+</I>&gt;<i> Would it be also possible for that demo to create and register one
+</I>&gt;<i> URB, and call the function rt_usb_send_ctrl_msg several times ?
+</I>&gt;<i> Sending the same URB over and over again ? Ofcourse, the
+</I>&gt;<i> p_transfer_buffer of the URB would be overwritten every time.
+</I>
+If you use the blocking function rt_usb_send_ctrl_msg() it is necessary
+to create only one URB (synchonous).
+
+Using the function rt_usb_submit_ctrl_urb() an URB can only be sent
+again after the callback function was called by the usbcore module.
+URBs can be sent by a driver before the first reply (callback call)
+arrives. The used URBs must not be the same.
+
+The rt_usb_ping module is able to send blocking URBs as well as
+non-blocking URBs (look @ line 34/35).
+
+&gt;<i>
+</I>&gt;<i> In my application i have to upload a file in chunks of 64 bytes to the
+</I>&gt;<i> device. The total file is approx 81 392 bytes, which makes approx 1280
+</I>&gt;<i> x 64 bytes. Can i use one URB for this ? And overwrite the
+</I>&gt;<i> p_transfer_buffer every time with the new 64 bytes of data ?
+</I>
+Yes, you can. But you can use one single URB with the whole 81392 Bytes,
+too.
+
+&gt;<i>
+</I>&gt;<i> Thanks for help.
+</I>&gt;<i>
+</I>&gt;<i> Cedric.
+</I>&gt;<i>
+</I>&gt;<i> ------------------------------------------------------------------------
+</I>&gt;<i> Yahoo! Mail goes everywhere you do. Get it on your phone
+</I>&gt;<i> &lt;<A HREF="http://us.rd.yahoo.com/evt=31132/*http://mobile.yahoo.com/services?promote=mail">http://us.rd.yahoo.com/evt=31132/*http://mobile.yahoo.com/services?promote=mail</A>&gt;.
+</I>
+
+J&#246;rg
+
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 249 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060515/35e7f2f4/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060515/35e7f2f4/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000026.html">[Usb4rt-users] URBs and data
+</A></li>
+	<LI>Next message: <A HREF="000028.html">[Usb4rt-users] disabling DEBUG messages
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#27">[ date ]</a>
+              <a href="thread.html#27">[ thread ]</a>
+              <a href="subject.html#27">[ subject ]</a>
+              <a href="author.html#27">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

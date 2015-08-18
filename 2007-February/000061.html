@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2007-February/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20About%20USB4RT%20for%20Xenomai%202.3%20and%20about%20progress%20on%0A%09faulty%20bulk%20read/write%20operation&In-Reply-To=%3Cd3623eab0702260928h84452t1dc60613665fb41f%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000062.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation</H1>
+    <B>Jerome Pasquero</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20About%20USB4RT%20for%20Xenomai%202.3%20and%20about%20progress%20on%0A%09faulty%20bulk%20read/write%20operation&In-Reply-To=%3Cd3623eab0702260928h84452t1dc60613665fb41f%40mail.gmail.com%3E"
+       TITLE="[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation">jay at cim.mcgill.ca
+       </A><BR>
+    <I>Mon Feb 26 18:28:09 CET 2007</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000062.html">[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Hi Jan,
+
+After putting on the side for a few weeks my project that makes use of
+usb4rt,  I am now coming back to it. Right before putting everything on the
+back burner, I was trying to figure out 2 recurrent problems with usb4rt
+under bulk transfer. One had to do with a weird restriction on the URB size
+and the other one with a faulty read operation. These problems were somehow
+- i.e. to the best of my capabilities - reported on this mailing list in
+September 2006.  Unfortunately, I never succeeded in finding what was wrong,
+even with all your helpful comments.
+
+In your September 21st 2006 post, you mentioned that there was a student who
+was working on a serial adapter driver. I was wondering if there was any
+progress on your side? Either from him or from you. Especially with respect
+to the two problems mentioned above.
+
+I realize that usb4rt is not a high priority project and that you have
+limited resources, but I was wondering if there are any plans in the near
+future to try to fix these problems.
+
+For now, there is a small change that I suggest making to the usb4rt trunk.
+Xenomai's latest version,  2.3,  is not supported by usb4rt. Actually, I
+suspect that it's only the build system of usb4rt that lacks the detection
+of Xenomai 2.3 since there doesn't seem to be huge difference between
+Xenomai 2.2 and 2.3. Am I right? If it's the case, could the usb4rt trunk be
+updated accordingly? Thanks
+
+Best regards
+
+-jerome
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20070226/32f7c10a/attachment.html">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20070226/32f7c10a/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000062.html">[Usb4rt-users] About USB4RT for Xenomai 2.3 and about progress on	faulty bulk read/write operation
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

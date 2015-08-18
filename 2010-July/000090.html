@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] usb4rt compilation with Xenomai
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2010-July/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20compilation%20with%20Xenomai&In-Reply-To=%3C4C33839D.7010105%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000089.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] usb4rt compilation with Xenomai</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20usb4rt%20compilation%20with%20Xenomai&In-Reply-To=%3C4C33839D.7010105%40web.de%3E"
+       TITLE="[Usb4rt-users] usb4rt compilation with Xenomai">jan.kiszka at web.de
+       </A><BR>
+    <I>Tue Jul  6 21:27:25 CEST 2010</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000089.html">[Usb4rt-users] usb4rt compilation with Xenomai
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#90">[ date ]</a>
+              <a href="thread.html#90">[ thread ]</a>
+              <a href="subject.html#90">[ subject ]</a>
+              <a href="author.html#90">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Ricardo Barbosa wrote:
+&gt;<i> Hi,
+</I>&gt;<i> 
+</I>&gt;<i> I'm building a BeagleBoard BSP with realtime (ARM architecture). I've
+</I>&gt;<i> already installed Xenomai 2.5.3 but I'm having trouble integrating usb4rt
+</I>&gt;<i> into it. How can I cross-compile usb4rt to be used with Xenomai? I'm asking
+</I>&gt;<i> this because usb4rt readme asks for rtai path installation but I only have
+</I>&gt;<i> Xenomai installed, how can I proceed?
+</I>
+Are you looking at the &quot;latest&quot; version from svn? I don't think anyone
+used it on non-x86 archs so far, so there might be more work ahead.
+Maybe it works like with RTnet (see its docs), but I'm not too
+optimistic. Also note the limitations of usb4rt (usb 1.1 only, known
+reception bug).
+
+Jan
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 257 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20100706/a08ca31a/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20100706/a08ca31a/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000089.html">[Usb4rt-users] usb4rt compilation with Xenomai
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#90">[ date ]</a>
+              <a href="thread.html#90">[ thread ]</a>
+              <a href="subject.html#90">[ subject ]</a>
+              <a href="author.html#90">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

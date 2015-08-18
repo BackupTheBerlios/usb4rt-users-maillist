@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB 2.0, PC/104 and camera
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2005-September/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%202.0%2C%20PC/104%20and%20camera&In-Reply-To=%3C43393E7D.2090008%40rts.uni-hannover.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000000.html">
+   <LINK REL="Next"  HREF="000002.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB 2.0, PC/104 and camera</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%202.0%2C%20PC/104%20and%20camera&In-Reply-To=%3C43393E7D.2090008%40rts.uni-hannover.de%3E"
+       TITLE="[Usb4rt-users] USB 2.0, PC/104 and camera">kiszka at rts.uni-hannover.de
+       </A><BR>
+    <I>Tue Sep 27 14:43:41 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000000.html">[Usb4rt-users] USB 2.0, PC/104 and camera
+</A></li>
+        <LI>Next message: <A HREF="000002.html">[Usb4rt-users] RT4USB max load with USB 1.1
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman wrote:
+&gt;<i> Can we use USB4RT to read images from a camera ? We
+</I>
+In principle yes, but it strongly depends on the camera. Real-time or
+not, you need documentation or - even better - a high-level USB
+reference driver for the particular device.
+
+&gt;<i> are using Linux with RTAI patch.
+</I>
+Note that RT4USB is yet limited to RTAI/fusion. The plan for the future
+is to build RT4USB on top of RTDM, which will hopefully soon be fully
+supported by RTAI 3.x (more precisely: from upcoming 3.3 onwards) as well.
+
+&gt;<i> 
+</I>&gt;<i> Our PC-board only has USB 1.1, we think this will be
+</I>&gt;<i> too slow to read the images fast enough. We are
+</I>&gt;<i> thinking about mounting a PC/104 extension board that
+</I>&gt;<i> supports USB 2.0. Does this pose a problem for the
+</I>&gt;<i> USB4RT ?
+</I>
+Not a problem except that, even on USB 2.0 hardware, RT4USB is so far
+limited to 1.1 speed. EHCI support for faster communication is scheduled
+for future development.
+
+&gt;<i> 
+</I>&gt;<i> Is Firewire a better alternative than USB 2.0 for
+</I>&gt;<i> reading camera pictures ?
+</I>
+Can be better if the documentation of the camera interface is more
+complete. Firewire cameras typically comply to open standard profiles
+while USB webcam etc. tend to work with proprietary interfaces. Of
+course, both domains contain exceptions.
+
+Jan
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 254 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20050927/3e6e8d72/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20050927/3e6e8d72/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000000.html">[Usb4rt-users] USB 2.0, PC/104 and camera
+</A></li>
+	<LI>Next message: <A HREF="000002.html">[Usb4rt-users] RT4USB max load with USB 1.1
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

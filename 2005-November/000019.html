@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB4RT and PCI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB4RT%20and%20PCI&In-Reply-To=%3C4370EAFB.8070506%40rts.uni-hannover.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000018.html">
+   <LINK REL="Next"  HREF="000020.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB4RT and PCI</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB4RT%20and%20PCI&In-Reply-To=%3C4370EAFB.8070506%40rts.uni-hannover.de%3E"
+       TITLE="[Usb4rt-users] USB4RT and PCI">kiszka at rts.uni-hannover.de
+       </A><BR>
+    <I>Tue Nov  8 19:14:19 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000018.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+        <LI>Next message: <A HREF="000020.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#19">[ date ]</a>
+              <a href="thread.html#19">[ thread ]</a>
+              <a href="subject.html#19">[ subject ]</a>
+              <a href="author.html#19">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman wrote:
+&gt;<i> --- Jan Kiszka &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">kiszka at rts.uni-hannover.de</A>&gt; wrote:
+</I>&gt;<i> 
+</I>&gt;&gt;<i> Cedric Herreman wrote:
+</I>&gt;&gt;&gt;<i> Thanks for the suggestion. This BIOS version does
+</I>&gt;&gt;<i> not
+</I>&gt;&gt;&gt;<i> allow me to disable the Ethernet ports on the
+</I>&gt;&gt;<i> board. I
+</I>&gt;&gt;&gt;<i> experimented with some settings but had no
+</I>&gt;&gt;<i> improvement
+</I>&gt;&gt;&gt;<i> for the moment.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> I tried loading the user space drivers. This
+</I>&gt;&gt;<i> works,
+</I>&gt;&gt;&gt;<i> dmesg shows me the vendor ID and product ID of the
+</I>&gt;&gt;&gt;<i> only attached device. I do not have this Host
+</I>&gt;&gt;<i> System
+</I>&gt;&gt;&gt;<i> Error with the user space drivers. 
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> An IRQ conflict would give me problems in user
+</I>&gt;&gt;<i> space
+</I>&gt;&gt;&gt;<i> also, i suppose ?
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;<i> It will. But did you try to figure out if there is
+</I>&gt;&gt;<i> actually such a
+</I>&gt;&gt;<i> conflict? What does /proc/interrupts tell you when
+</I>&gt;&gt;<i> both Ethernet and USB
+</I>&gt;&gt;<i> is handled by normal Linux drivers?
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> Jan
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>
+</I>&gt;<i> 
+</I>&gt;<i> There was indeed a conflict, both USB HC and Realtek
+</I>&gt;<i> NIC used interrupt 9.
+</I>&gt;<i> &quot;lspci -v&quot; showed me that the two USB host controllers
+</I>&gt;<i> use IRQ9 and that the Ethernet controller also uses
+</I>&gt;<i> IRQ9.
+</I>&gt;<i> 
+</I>&gt;<i> I did a modprobe -r to remove the Ethernet drivers
+</I>&gt;<i> (mii,8139too). Shouldn't this solve the problem then ?
+</I>&gt;<i> Still i get &quot;Host System Errors&quot;. 
+</I>
+I should indeed. Sorry, now I'm clueless.
+
+&gt;<i> 
+</I>&gt;<i> Can there be a conflict with PCI/DMA memory allocation
+</I>&gt;<i> ?
+</I>
+Nope, that's not possible.
+
+Jan
+
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 250 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20051108/25da45ff/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20051108/25da45ff/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000018.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+	<LI>Next message: <A HREF="000020.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#19">[ date ]</a>
+              <a href="thread.html#19">[ thread ]</a>
+              <a href="subject.html#19">[ subject ]</a>
+              <a href="author.html#19">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

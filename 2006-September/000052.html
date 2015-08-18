@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] problem with URB's transfer_buffer_length?
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20problem%20with%20URB%27s%20transfer_buffer_length%3F&In-Reply-To=%3C20060909154150.27556.qmail%40web32712.mail.mud.yahoo.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000051.html">
+   <LINK REL="Next"  HREF="000055.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] problem with URB's transfer_buffer_length?</H1>
+    <B>Cedric Herreman</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20problem%20with%20URB%27s%20transfer_buffer_length%3F&In-Reply-To=%3C20060909154150.27556.qmail%40web32712.mail.mud.yahoo.com%3E"
+       TITLE="[Usb4rt-users] problem with URB's transfer_buffer_length?">glocker50 at yahoo.com
+       </A><BR>
+    <I>Sat Sep  9 17:41:50 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000051.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+        <LI>Next message: <A HREF="000055.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#52">[ date ]</a>
+              <a href="thread.html#52">[ thread ]</a>
+              <a href="subject.html#52">[ subject ]</a>
+              <a href="author.html#52">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Jerome,
+
+I have an application where i am sending 2 bytes to a device. This works ok for me. The code is based on the usbping example. 
+
+In my source an URB is created with a buffer of 64 bytes (max-packet size). Then i use function rt_usb_send_ctrl_msg with the message length as an argument.
+
+If i look at your debug output, it seems the transmission of the four bytes is succesful : &quot;4 / 4 Byte sent&quot;. Apparently the device accepts the data, but does not process them as expected.
+
+Rgds,
+
+Cedric.
+ 
+Jerome Pasquero wrote:
+&gt;<i> Jan Kiszka wrote:
+</I>&gt;&gt;<i> Jerome Pasquero wrote:
+</I>&gt;&gt;<i>   
+</I>&gt;&gt;&gt;<i> Hi all,
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> I am trying to convert a simple driver to make it work under USB4RT.  
+</I>&gt;&gt;&gt;<i> The device I am trying to interface with is an FPGA development board 
+</I>&gt;&gt;&gt;<i> for which Linux drivers have already been implemented and are functional.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> However, I cannot get it to work using USB4RT. For instance, I have 
+</I>&gt;&gt;&gt;<i> implemented a simple write function to the FPGA as follows. This code is 
+</I>&gt;&gt;&gt;<i> directly inspired from the RT_USB_PING example.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i> int WriteByte(unsigned char addr, unsigned char data)
+</I>&gt;&gt;&gt;<i> {
+</I>&gt;&gt;&gt;<i>     struct rt_urb* p_urb_out;
+</I>&gt;&gt;&gt;<i>     int ret;
+</I>&gt;&gt;&gt;<i>     unsigned char buf[4];
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i>     // instructions for FPGA
+</I>&gt;&gt;&gt;<i>     buf[0] = CMD_WRITE_BYTE;       // 0x01
+</I>&gt;&gt;&gt;<i>     buf[1] = addr;            // addr on FPGA
+</I>&gt;&gt;&gt;<i>     buf[2] = 1;            // data size
+</I>&gt;&gt;&gt;<i>     buf[3] = data;
+</I>&gt;&gt;&gt;<i>     
+</I>&gt;&gt;&gt;<i>     p_urb_out = create_data_out_urb(p_device, 4);
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i>     if(!p_urb_out)
+</I>&gt;&gt;&gt;<i>        {
+</I>&gt;&gt;&gt;<i>         printk(&quot;THMB_RT: [ERROR] Creating DATA OUT URB for WriteByte\n&quot;);
+</I>&gt;&gt;&gt;<i>         return -1;
+</I>&gt;&gt;&gt;<i>     }
+</I>&gt;&gt;&gt;<i>    
+</I>&gt;&gt;&gt;<i>     memcpy(p_urb_out-&gt;p_transfer_buffer, buf, 4);
+</I>&gt;&gt;&gt;<i>     ret = rt_usb_send_urb_msg(p_urb_out); // blocking call for the moment
+</I>&gt;&gt;&gt;<i>     
+</I>&gt;&gt;<i> You are mixing up urb creation and transmission here. If WriteByte runs
+</I>&gt;&gt;<i> in non-RT context, the blocking transmit will fail. If you run it in RT,
+</I>&gt;&gt;<i> allocation and release is not allowed. Check the rt-ping example again.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>   
+</I>&gt;<i> I have now separated everything that has to do with URB 
+</I>&gt;<i> allocation/freeing from transmission.
+</I>&gt;<i> I do the URB creations and destructions in 
+</I>&gt;<i> init_module()/cleanup_module() and send the URBs inside the RT 
+</I>&gt;<i> periodic_fct. Before sending off an URB, I copy the data to its 
+</I>&gt;<i> transfer_buffer which was pre-allocated in a non-realtime context.
+</I>&gt;<i> I still get the same erratic behavior as before, i.e. I need to send 
+</I>&gt;<i> URBs that are bigger than 64 bytes even though they only hold a few 
+</I>&gt;<i> bytes of actual meaningful data. That's the only way I can get to 
+</I>&gt;<i> repeatedly write a single byte to the FPGA development board I am trying 
+</I>&gt;<i> to interface with. This is not the case if I am not using USB4RT, but 
+</I>&gt;<i> try to communicate with the development board through regular USB calls 
+</I>&gt;<i> (prior working project).
+</I>
+Ok, the problem is more complicated. Have you already tried to play with
+the ping demo and reduced packets sizes there? Maybe (likely?) it's a
+common issues, and we could reproduce it even without your hardware. I
+have no test setup at hand right now, but I will try to have a look when
+time permits.
+
+&gt;<i> 
+</I>&gt;&gt;<i> Further hint: CONFIG_XENO_SKIN_DEBUG_RTDM can help to find illicit
+</I>&gt;&gt;<i> invocations of RTDM services (but it will not yet detect Linux calls
+</I>&gt;&gt;<i> over RT contexts).
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>   
+</I>&gt;<i> Sorry Jan, I've looked around for this CONFIG_XENO_SKIN_DEBUG_RTDM and 
+</I>&gt;<i> cannot find it.
+</I>&gt;<i> What/where is it exactly?
+</I>
+My bad. It'S CONFIG_XENO_OPT_DEBUG_RTDM, and it depends on
+CONFIG_XENO_OPT_DEBUG (Xenomai-&gt;Debug Support).
+
+Jan
+
+
+_______________________________________________
+Usb4rt-users mailing list
+<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">Usb4rt-users at lists.berlios.de</A>
+<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">https://lists.berlios.de/mailman/listinfo/usb4rt-users</A>
+
+
+
+
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060909/134e2e46/attachment.html">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060909/134e2e46/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000051.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+	<LI>Next message: <A HREF="000055.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#52">[ date ]</a>
+              <a href="thread.html#52">[ thread ]</a>
+              <a href="subject.html#52">[ subject ]</a>
+              <a href="author.html#52">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

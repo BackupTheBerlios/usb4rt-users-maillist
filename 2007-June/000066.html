@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] intercepting the output of a mouse with usb4rt
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2007-June/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20intercepting%20the%20output%20of%20a%20mouse%20with%20usb4rt&In-Reply-To=%3Cd3623eab0706181048x1cc2ed9bkc8b69d5b21bcde76%40mail.gmail.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000065.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] intercepting the output of a mouse with usb4rt</H1>
+    <B>Jerome Pasquero</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20intercepting%20the%20output%20of%20a%20mouse%20with%20usb4rt&In-Reply-To=%3Cd3623eab0706181048x1cc2ed9bkc8b69d5b21bcde76%40mail.gmail.com%3E"
+       TITLE="[Usb4rt-users] intercepting the output of a mouse with usb4rt">jay at cim.mcgill.ca
+       </A><BR>
+    <I>Mon Jun 18 19:48:03 CEST 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000065.html">[Usb4rt-users] intercepting the output of a mouse with usb4rt
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#66">[ date ]</a>
+              <a href="thread.html#66">[ thread ]</a>
+              <a href="subject.html#66">[ subject ]</a>
+              <a href="author.html#66">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>As always, thanks for you quick reply Jan.
+
+And it turns out, you are right: isochronous transfers and interrupt
+transfers are not supported yet by USB4RT.
+However, if I am not mistaken, according to the USB specs, a bulk transfer
+and an interrupt transfer are not much different.
+So I was able to poll the relative X and Y mouse displacements with bulk
+calls with a INTERRUPT receiving pipe (i.e. usb_rcvintpipe). In other words,
+I do the same thing as with a bulk transfer (see rt_usb_core.c), except I do
+it over an interrupt pipe.
+
+Of course, because it is not meant to be used that way, if the mouse is
+polled when it's not moving or if it is polled faster than its internal
+refresh, calls to rt_usb_submit_urb might return EBUSY errors. All I do for
+the moment is ignore these EBUSY errors when they occur. Actually, if the
+polling frequency is matched to the mouse internal refresh rate, there is
+never any problem because everything is in synch and the EBUY errors don't
+even show up.
+
+I am aware that none of the above is probably very clean, but I thought I
+would still post it here if anyone needs to poll the relative displacements
+of a standard mouse as I do.
+
+cheers
+
+-jerome
+
+
+
+On 6/18/07, Jan Kiszka &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">jan.kiszka at web.de</A>&gt; wrote:
+&gt;<i>
+</I>&gt;<i> Jerome Pasquero wrote:
+</I>&gt;<i> &gt; Hi,
+</I>&gt;<i> &gt;
+</I>&gt;<i> &gt; I was wondering if usb4rt in its current state supports interrupt
+</I>&gt;<i> &gt; transfers?
+</I>&gt;<i> &gt; I've had no success in intercepting the relative motions of a usb mouse.
+</I>&gt;<i> &gt;
+</I>&gt;<i> &gt; I based my code on, among other things, the rt_usb_ping example and on
+</I>&gt;<i> the
+</I>&gt;<i> &gt; usbmouse.c file found under linux but I cannot get my head around how it
+</I>&gt;<i> &gt; should work with usb4rt.
+</I>&gt;<i> &gt; Note that I am able to carry out bulk transfers - minus a few glitches
+</I>&gt;<i> &gt; already reported on this list earlier - on another device which supports
+</I>&gt;<i> &gt; it.
+</I>&gt;<i> &gt; But for some reason, I simply can't get to read the offset positions
+</I>&gt;<i> from a
+</I>&gt;<i> &gt; simple mouse.
+</I>&gt;<i> &gt; I am clearly missing something? Any idea what it could be?
+</I>&gt;<i>
+</I>&gt;<i> IIRC, usb4rt currently supports bulk and control transfer, but no
+</I>&gt;<i> interrupt transfer. Dunno if it's hard to add, though. May be it's just
+</I>&gt;<i> adding a few more if-cases. We just didn't need it for the device we
+</I>&gt;<i> once attached.
+</I>&gt;<i>
+</I>&gt;<i> &gt;
+</I>&gt;<i> &gt; I apologize for how messy my code must look. For now I just wanted to
+</I>&gt;<i> check
+</I>&gt;<i> &gt; if I could read from a simple usb mouse.
+</I>&gt;<i> &gt; So I put together the following non-blocking call. But the callback
+</I>&gt;<i> &gt; function
+</I>&gt;<i> &gt; rt_callback_fkt is never handled... In other words, nothing happens.
+</I>&gt;<i> &gt;
+</I>&gt;<i> &gt; dmesg doesn't seem to report any problem.
+</I>&gt;<i> &gt;
+</I>&gt;<i> &gt; thanks for any help I can get
+</I>&gt;<i> &gt;
+</I>&gt;<i> &gt; -jerome
+</I>&gt;<i>
+</I>&gt;<i> Jan
+</I>&gt;<i>
+</I>&gt;<i>
+</I>&gt;<i>
+</I>
+
+-- 
+Jerome Pasquero
+Ph.D. Student
+McGill University
+Haptics Lab
+3480 University Street Room 410
+Montr&#233;al, Qu&#233;bec, Canada
+H3A 2A7
+T: (514) 398-8206
+F: (514) 398-7348
+www.cim.mcgill.ca/~jay
+-------------- next part --------------
+An HTML attachment was scrubbed...
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20070618/a7dae1e8/attachment.html">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20070618/a7dae1e8/attachment.html</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000065.html">[Usb4rt-users] intercepting the output of a mouse with usb4rt
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#66">[ date ]</a>
+              <a href="thread.html#66">[ thread ]</a>
+              <a href="subject.html#66">[ subject ]</a>
+              <a href="author.html#66">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

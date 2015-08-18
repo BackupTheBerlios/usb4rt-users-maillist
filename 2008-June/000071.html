@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] [PATCH] Compile USB4RT again
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2008-June/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20%5BPATCH%5D%20Compile%20USB4RT%20again&In-Reply-To=%3C48688AA9.8010802%40rts.uni-hannover.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000070.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] [PATCH] Compile USB4RT again</H1>
+    <B>Sebastian Smolorz</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20%5BPATCH%5D%20Compile%20USB4RT%20again&In-Reply-To=%3C48688AA9.8010802%40rts.uni-hannover.de%3E"
+       TITLE="[Usb4rt-users] [PATCH] Compile USB4RT again">smolorz at rts.uni-hannover.de
+       </A><BR>
+    <I>Mon Jun 30 09:26:33 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000070.html">[Usb4rt-users] [PATCH] Compile USB4RT again
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#71">[ date ]</a>
+              <a href="thread.html#71">[ thread ]</a>
+              <a href="subject.html#71">[ subject ]</a>
+              <a href="author.html#71">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Jan Kiszka wrote:
+&gt;<i> Sebastian Smolorz wrote:
+</I>&gt;&gt;<i> Hello Jan,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> I tried to compile USB4RT for current Linux kernels and Xenomai, see
+</I>&gt;&gt;<i> attached patch for rt_usb.h. The patch for autogen.sh removes the
+</I>&gt;&gt;<i> dependency of autotools-1.9.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> The last issue which I'm not sure I have the right patch for affects the
+</I>&gt;&gt;<i>  architecture comparison between the host and Xenomai. It failed due to
+</I>&gt;&gt;<i> Xenomai reporting that it was build for 'x86'. My proposed patch for
+</I>&gt;&gt;<i> configure.ac simply removes this comparison. I saw in RTnet that for
+</I>&gt;&gt;<i> Xenomai versions labelled with 'xeno-21' in configure.ac Xenomai is not
+</I>&gt;&gt;<i> asked for its architecture.
+</I>&gt;<i> 
+</I>&gt;<i> Found no trace of CONFIG_ARCH_* users inside the stack, so removing
+</I>&gt;<i> those hunks is fine (there should be no arch-dependency anyway).
+</I>&gt;<i> 
+</I>&gt;<i> Thanks for all patches, will merge,
+</I>&gt;<i> 
+</I>&gt;<i> Jan
+</I>&gt;<i> 
+</I>&gt;<i> PS: Happen to have x86-64 build warning fixes at hand as well? ;)
+</I>
+No, not ATM.
+
+-- 
+Sebastian
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000070.html">[Usb4rt-users] [PATCH] Compile USB4RT again
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#71">[ date ]</a>
+              <a href="thread.html#71">[ thread ]</a>
+              <a href="subject.html#71">[ subject ]</a>
+              <a href="author.html#71">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

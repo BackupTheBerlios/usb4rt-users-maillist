@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] problem with URB's transfer_buffer_length?
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20problem%20with%20URB%27s%20transfer_buffer_length%3F&In-Reply-To=%3C4500A1A2.105%40cim.mcgill.ca%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000049.html">
+   <LINK REL="Next"  HREF="000051.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] problem with URB's transfer_buffer_length?</H1>
+    <B>Jerome Pasquero</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20problem%20with%20URB%27s%20transfer_buffer_length%3F&In-Reply-To=%3C4500A1A2.105%40cim.mcgill.ca%3E"
+       TITLE="[Usb4rt-users] problem with URB's transfer_buffer_length?">jay at cim.mcgill.ca
+       </A><BR>
+    <I>Fri Sep  8 00:48:02 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000049.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+        <LI>Next message: <A HREF="000051.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#50">[ date ]</a>
+              <a href="thread.html#50">[ thread ]</a>
+              <a href="subject.html#50">[ subject ]</a>
+              <a href="author.html#50">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Jan Kiszka wrote:
+&gt;<i> Jerome Pasquero wrote:
+</I>&gt;<i>   
+</I>&gt;&gt;<i> Hi all,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> I am trying to convert a simple driver to make it work under USB4RT.  
+</I>&gt;&gt;<i> The device I am trying to interface with is an FPGA development board 
+</I>&gt;&gt;<i> for which Linux drivers have already been implemented and are functional.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> However, I cannot get it to work using USB4RT. For instance, I have 
+</I>&gt;&gt;<i> implemented a simple write function to the FPGA as follows. This code is 
+</I>&gt;&gt;<i> directly inspired from the RT_USB_PING example.
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> int WriteByte(unsigned char addr, unsigned char data)
+</I>&gt;&gt;<i> {
+</I>&gt;&gt;<i>     struct rt_urb* p_urb_out;
+</I>&gt;&gt;<i>     int ret;
+</I>&gt;&gt;<i>     unsigned char buf[4];
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>     // instructions for FPGA
+</I>&gt;&gt;<i>     buf[0] = CMD_WRITE_BYTE;       // 0x01
+</I>&gt;&gt;<i>     buf[1] = addr;            // addr on FPGA
+</I>&gt;&gt;<i>     buf[2] = 1;            // data size
+</I>&gt;&gt;<i>     buf[3] = data;
+</I>&gt;&gt;<i>     
+</I>&gt;&gt;<i>     p_urb_out = create_data_out_urb(p_device, 4);
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i>     if(!p_urb_out)
+</I>&gt;&gt;<i>        {
+</I>&gt;&gt;<i>         printk(&quot;THMB_RT: [ERROR] Creating DATA OUT URB for WriteByte\n&quot;);
+</I>&gt;&gt;<i>         return -1;
+</I>&gt;&gt;<i>     }
+</I>&gt;&gt;<i>    
+</I>&gt;&gt;<i>     memcpy(p_urb_out-&gt;p_transfer_buffer, buf, 4);
+</I>&gt;&gt;<i>     ret = rt_usb_send_urb_msg(p_urb_out); // blocking call for the moment
+</I>&gt;&gt;<i>     
+</I>&gt;<i>
+</I>&gt;<i> You are mixing up urb creation and transmission here. If WriteByte runs
+</I>&gt;<i> in non-RT context, the blocking transmit will fail. If you run it in RT,
+</I>&gt;<i> allocation and release is not allowed. Check the rt-ping example again.
+</I>&gt;<i>
+</I>&gt;<i>   
+</I>I have now separated everything that has to do with URB 
+allocation/freeing from transmission.
+I do the URB creations and destructions in 
+init_module()/cleanup_module() and send the URBs inside the RT 
+periodic_fct. Before sending off an URB, I copy the data to its 
+transfer_buffer which was pre-allocated in a non-realtime context.
+I still get the same erratic behavior as before, i.e. I need to send 
+URBs that are bigger than 64 bytes even though they only hold a few 
+bytes of actual meaningful data. That's the only way I can get to 
+repeatedly write a single byte to the FPGA development board I am trying 
+to interface with. This is not the case if I am not using USB4RT, but 
+try to communicate with the development board through regular USB calls 
+(prior working project).
+
+&gt;<i> Further hint: CONFIG_XENO_SKIN_DEBUG_RTDM can help to find illicit
+</I>&gt;<i> invocations of RTDM services (but it will not yet detect Linux calls
+</I>&gt;<i> over RT contexts).
+</I>&gt;<i>
+</I>&gt;<i>   
+</I>Sorry Jan, I've looked around for this CONFIG_XENO_SKIN_DEBUG_RTDM and 
+cannot find it.
+What/where is it exactly?
+
+thanks
+
+-jerome
+&gt;<i> Jan
+</I>&gt;<i>
+</I>&gt;<i>   
+</I>
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000049.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+	<LI>Next message: <A HREF="000051.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#50">[ date ]</a>
+              <a href="thread.html#50">[ thread ]</a>
+              <a href="subject.html#50">[ subject ]</a>
+              <a href="author.html#50">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

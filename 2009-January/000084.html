@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] Project: state-of-the-art
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2009-January/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Project%3A%20state-of-the-art&In-Reply-To=%3C495E097A.5050907%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000083.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] Project: state-of-the-art</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Project%3A%20state-of-the-art&In-Reply-To=%3C495E097A.5050907%40web.de%3E"
+       TITLE="[Usb4rt-users] Project: state-of-the-art">jan.kiszka at web.de
+       </A><BR>
+    <I>Fri Jan  2 13:32:58 CET 2009</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000083.html">[Usb4rt-users] Project: state-of-the-art
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#84">[ date ]</a>
+              <a href="thread.html#84">[ thread ]</a>
+              <a href="subject.html#84">[ subject ]</a>
+              <a href="author.html#84">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Javi Roman wrote:
+&gt;<i> Hi!
+</I>&gt;<i> 
+</I>&gt;<i> I've just discovered this project and it has been a surprise, I dind't
+</I>&gt;<i> know USB was real time capable. I'm strongly interested in USB
+</I>&gt;<i> networking with hard real time capabilities, ..., RTNET with USB
+</I>&gt;<i> ethernet controllers. I suppose USB4RT is the starting point of this
+</I>&gt;<i> approach. Please, can you tell me, shortly speaking, the state of the
+</I>&gt;<i> proyect? Who can I contribute (If that's possible)?
+</I>
+USB4RT is in kind of a dormant state right now. The most urging issues are
+ - known but still unfixed issues doing bulk transfer (IIRC, see also
+   [1]), no one yet understood what goes wrong inside the stack
+ - lacking USB 2.0 (EHCI) support
+ - lacking proper abstraction layer to base high-level USB drivers (like
+   eth-over-usb) on top it, something RTDM-based was once considered but
+   is still looking for someone to work on.
+
+But at least the current stack still compiles against latest Xenomai and
+Linux 2.6.27 - just checked :).
+
+Well, all these things are no black magic or blocked by fundamental
+design issues. This project is just lacking resources to address them.
+If you are willing to contribute even only to parts of that topics, you
+would be very welcome and I would try my best to support you, at the
+bare minimum by merging patches.
+
+The good news these days is that debugging the stack should become much
+easier: KVM (or plain QEMU if you are lacking hw support) talks USB up
+to 2.0 now. You can either debug the stack at hw emulation level (ie.
+look into the USB model of QEMU to see the state the hardware is in) or
+debug the kernel and modules via the built-in gdbserver at system level.
+One could even imagine to write simple USB device models for test
+purposes, stressing specific (problematic...) USB modes without having
+to provide real hardware. That should accelerate development and test
+cycles a lot. Sigh, if there were just a bit more time...
+
+Jan
+
+[1]<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/2006-September/000055.html">https://lists.berlios.de/pipermail/usb4rt-users/2006-September/000055.html</A>
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 257 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20090102/4600c22f/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20090102/4600c22f/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000083.html">[Usb4rt-users] Project: state-of-the-art
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#84">[ date ]</a>
+              <a href="thread.html#84">[ thread ]</a>
+              <a href="subject.html#84">[ subject ]</a>
+              <a href="author.html#84">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

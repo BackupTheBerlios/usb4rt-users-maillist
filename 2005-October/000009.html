@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] Building USB4RT
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2005-October/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Building%20USB4RT&In-Reply-To=%3C43555249.90907%40rts.uni-hannover.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000008.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] Building USB4RT</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20Building%20USB4RT&In-Reply-To=%3C43555249.90907%40rts.uni-hannover.de%3E"
+       TITLE="[Usb4rt-users] Building USB4RT">kiszka at rts.uni-hannover.de
+       </A><BR>
+    <I>Tue Oct 18 21:51:37 CEST 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000008.html">[Usb4rt-users] Building USB4RT
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#9">[ date ]</a>
+              <a href="thread.html#9">[ thread ]</a>
+              <a href="subject.html#9">[ subject ]</a>
+              <a href="author.html#9">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Peter van den Bosch wrote:
+&gt;&gt;<i> I would say you have two options:
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> o try if creating an empty config/defconfig helps in any way
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> Thanks, this helped.
+</I>&gt;<i> Second problem is in configure: it checks on .9*-fusion instead
+</I>&gt;<i> 0.9*-fusion, I changed it, now it builds.
+</I>&gt;<i> 
+</I>
+Will fix it in SVN, thanks. I will also try to upload a real defconfig -
+must be similar to what we do in RTnet.
+
+&gt;&gt;<i> o downgrade to revision 36 (svn update -r36), there seem to be no
+</I>&gt;&gt;<i>   relevant code changes between both revisions, only configure stuff
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> I tried this with fusion-0.8.3/linux-2.6.12, no real problem here
+</I>&gt;<i> (except missing NULL as fourth argument rt_intr_create).
+</I>&gt;<i> 
+</I>&gt;<i> In both cases, insmod rt_usbcore and rt_uhci_hcd works, however I cannot
+</I>&gt;<i> ping anything (neither the Logitech MX518 mouse or the Prolific 2303
+</I>&gt;<i> RS232-USB). Am I supposed to be able to ping the (root) hubs? it doesn't
+</I>&gt;<i> work either.
+</I>&gt;<i> I'm not a USB-expert so it is hard to find the problem, are there any
+</I>&gt;<i> kernel/fusion options that might be important?
+</I>&gt;<i> I did rmmod usbcore, uhci_hcd, ehci_hcd.
+</I>
+I think to remember that you have to specify the USB controller device
+ID explicitly on loading. But I haven't tried this for a while. Too bad
+that Joerg is not in reach.
+
+&gt;<i> 
+</I>&gt;<i> Also when loading rt_usbcore and rt_uhci_hcd the LED of the optical
+</I>&gt;<i> mouse didn't light up, which it normally does at this point. Maybe the
+</I>&gt;<i> host driver should also detect devices and show it with dmesg?
+</I>&gt;<i> 
+</I>
+Noting in the README? I will have to do this on my own first to give
+better answers.
+
+Jan
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 254 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20051018/8bce859f/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20051018/8bce859f/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000008.html">[Usb4rt-users] Building USB4RT
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#9">[ date ]</a>
+              <a href="thread.html#9">[ thread ]</a>
+              <a href="subject.html#9">[ subject ]</a>
+              <a href="author.html#9">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

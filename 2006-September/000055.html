@@ -1,0 +1,842 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] problem with URB's transfer_buffer_length?
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20problem%20with%20URB%27s%20transfer_buffer_length%3F&In-Reply-To=%3C4511ED73.3090001%40cim.mcgill.ca%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000052.html">
+   <LINK REL="Next"  HREF="000056.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] problem with URB's transfer_buffer_length?</H1>
+    <B>Jerome Pasquero</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20problem%20with%20URB%27s%20transfer_buffer_length%3F&In-Reply-To=%3C4511ED73.3090001%40cim.mcgill.ca%3E"
+       TITLE="[Usb4rt-users] problem with URB's transfer_buffer_length?">jay at cim.mcgill.ca
+       </A><BR>
+    <I>Thu Sep 21 03:40:03 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000052.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+        <LI>Next message: <A HREF="000056.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#55">[ date ]</a>
+              <a href="thread.html#55">[ thread ]</a>
+              <a href="subject.html#55">[ subject ]</a>
+              <a href="author.html#55">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Jan Kiszka wrote:
+&gt;<i> Jerome Pasquero wrote:
+</I>&gt;<i>   
+</I>&gt;&gt;<i> Jan Kiszka wrote:
+</I>&gt;&gt;<i>     
+</I>&gt;&gt;&gt;<i> Jerome Pasquero wrote:
+</I>&gt;&gt;&gt;<i>   
+</I>&gt;&gt;&gt;<i>       
+</I>&gt;&gt;&gt;&gt;<i> Hi all,
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> I am trying to convert a simple driver to make it work under USB4RT.  
+</I>&gt;&gt;&gt;&gt;<i> The device I am trying to interface with is an FPGA development board 
+</I>&gt;&gt;&gt;&gt;<i> for which Linux drivers have already been implemented and are functional.
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> However, I cannot get it to work using USB4RT. For instance, I have 
+</I>&gt;&gt;&gt;&gt;<i> implemented a simple write function to the FPGA as follows. This code is 
+</I>&gt;&gt;&gt;&gt;<i> directly inspired from the RT_USB_PING example.
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i> int WriteByte(unsigned char addr, unsigned char data)
+</I>&gt;&gt;&gt;&gt;<i> {
+</I>&gt;&gt;&gt;&gt;<i>     struct rt_urb* p_urb_out;
+</I>&gt;&gt;&gt;&gt;<i>     int ret;
+</I>&gt;&gt;&gt;&gt;<i>     unsigned char buf[4];
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i>     // instructions for FPGA
+</I>&gt;&gt;&gt;&gt;<i>     buf[0] = CMD_WRITE_BYTE;       // 0x01
+</I>&gt;&gt;&gt;&gt;<i>     buf[1] = addr;            // addr on FPGA
+</I>&gt;&gt;&gt;&gt;<i>     buf[2] = 1;            // data size
+</I>&gt;&gt;&gt;&gt;<i>     buf[3] = data;
+</I>&gt;&gt;&gt;&gt;<i>     
+</I>&gt;&gt;&gt;&gt;<i>     p_urb_out = create_data_out_urb(p_device, 4);
+</I>&gt;&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;&gt;<i>     if(!p_urb_out)
+</I>&gt;&gt;&gt;&gt;<i>        {
+</I>&gt;&gt;&gt;&gt;<i>         printk(&quot;THMB_RT: [ERROR] Creating DATA OUT URB for WriteByte\n&quot;);
+</I>&gt;&gt;&gt;&gt;<i>         return -1;
+</I>&gt;&gt;&gt;&gt;<i>     }
+</I>&gt;&gt;&gt;&gt;<i>    
+</I>&gt;&gt;&gt;&gt;<i>     memcpy(p_urb_out-&gt;p_transfer_buffer, buf, 4);
+</I>&gt;&gt;&gt;&gt;<i>     ret = rt_usb_send_urb_msg(p_urb_out); // blocking call for the moment
+</I>&gt;&gt;&gt;&gt;<i>     
+</I>&gt;&gt;&gt;&gt;<i>         
+</I>&gt;&gt;&gt;<i> You are mixing up urb creation and transmission here. If WriteByte runs
+</I>&gt;&gt;&gt;<i> in non-RT context, the blocking transmit will fail. If you run it in RT,
+</I>&gt;&gt;&gt;<i> allocation and release is not allowed. Check the rt-ping example again.
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i>   
+</I>&gt;&gt;&gt;<i>       
+</I>&gt;&gt;<i> I have now separated everything that has to do with URB 
+</I>&gt;&gt;<i> allocation/freeing from transmission.
+</I>&gt;&gt;<i> I do the URB creations and destructions in 
+</I>&gt;&gt;<i> init_module()/cleanup_module() and send the URBs inside the RT 
+</I>&gt;&gt;<i> periodic_fct. Before sending off an URB, I copy the data to its 
+</I>&gt;&gt;<i> transfer_buffer which was pre-allocated in a non-realtime context.
+</I>&gt;&gt;<i> I still get the same erratic behavior as before, i.e. I need to send 
+</I>&gt;&gt;<i> URBs that are bigger than 64 bytes even though they only hold a few 
+</I>&gt;&gt;<i> bytes of actual meaningful data. That's the only way I can get to 
+</I>&gt;&gt;<i> repeatedly write a single byte to the FPGA development board I am trying 
+</I>&gt;&gt;<i> to interface with. This is not the case if I am not using USB4RT, but 
+</I>&gt;&gt;<i> try to communicate with the development board through regular USB calls 
+</I>&gt;&gt;<i> (prior working project).
+</I>&gt;&gt;<i>     
+</I>&gt;<i>
+</I>&gt;<i> Ok, the problem is more complicated. Have you already tried to play with
+</I>&gt;<i> the ping demo and reduced packets sizes there? Maybe (likely?) it's a
+</I>&gt;<i> common issues, and we could reproduce it even without your hardware. I
+</I>&gt;<i> have no test setup at hand right now, but I will try to have a look when
+</I>&gt;<i> time permits.
+</I>&gt;<i>
+</I>&gt;<i>   
+</I>&gt;&gt;&gt;<i> Further hint: CONFIG_XENO_SKIN_DEBUG_RTDM can help to find illicit
+</I>&gt;&gt;&gt;<i> invocations of RTDM services (but it will not yet detect Linux calls
+</I>&gt;&gt;&gt;<i> over RT contexts).
+</I>&gt;&gt;&gt;<i>
+</I>&gt;&gt;&gt;<i>   
+</I>&gt;&gt;&gt;<i>       
+</I>&gt;&gt;<i> Sorry Jan, I've looked around for this CONFIG_XENO_SKIN_DEBUG_RTDM and 
+</I>&gt;&gt;<i> cannot find it.
+</I>&gt;&gt;<i> What/where is it exactly?
+</I>&gt;&gt;<i>     
+</I>&gt;<i>
+</I>&gt;<i> My bad. It'S CONFIG_XENO_OPT_DEBUG_RTDM, and it depends on
+</I>&gt;<i> CONFIG_XENO_OPT_DEBUG (Xenomai-&gt;Debug Support).
+</I>&gt;<i>
+</I>&gt;<i> Jan
+</I>&gt;<i>
+</I>&gt;<i>   
+</I>thanks Jan,
+
+it's been a while since my last posting. I have been trying to figure 
+out what is going on but with very limited success.
+
+As you suggested, I enabled  CONFIG_XENO_OPT_DEBUG_RTDM and 
+CONFIG_XENO_OPT_DEBUG and recompiled the kernel (2.6.17.11) with the 
+latest Xenomai-2.2.3 patch.
+I still cannot get my module application (based on rt_usb_ping demo) to 
+work as expected, and there doesn't seem to be any report of illicit 
+invocation of RTDM services.
+
+The ping demo works just fine with transfer buffer sizes smaller than 65 
+bytes. As a matter of fact, so does my module (called sidus_rt) whenever 
+a ctrl urb is sent to endpoint 0 (for both IN and OUT pipes). So far, so 
+good.
+The problems arise when the urbs are sent to endpoint 1, which is not an 
+operation carried out by the ping demo.
+
+Here are a few observations that might be helpful:
+
+1. Sending an URB OUT to endpoint 1 with a transfer_buffer_size smaller 
+than 65 bytes (i.e. 64) works fine on the first try, but subsequent send 
+operations using the same URB do not behave as expected,  even though  I 
+cannot see anything wrong in dmesg.
+
+2. Sending an URB OUT to endpoint 1 with transfer_buffer_size of 65 
+bytes (or larger) works for the first and all subsequent send 
+operations. Since the device supports a packet size of 64 bytes, that 
+means that as long as more than one packet is sent with the same 
+rt_usb_send_urb_msg call,  the communication seems to behave as expected.
+
+3. With the usb device I am using, reading data from the device requires 
+sending two URBS:  first an URB OUT to endpoint 1 with a device-specific 
+read instruction in the p_transfer_buffer, followed by an URB IN. Here 
+again, only the first read operation (i.e. OUT urb followed by IN urb) 
+returns the expected value. All subsequent read operations return junk.
+
+4. If the transfer_buffer_size is set to 65 bytes, then every odd (2nd) 
+read operation returns the expected value: 
+URB:OUT1--&gt;URB:IN1--&gt;URB:OUT2--&gt;URB:IN2.  The valid data is the one 
+collected from the first URB:IN (i.e. URB:IN1) but the two following 
+URBS are necessary for the next read operation to work. Interestingly, 
+URB:IN2 returns 0 bytes.
+
+Is there something that I really haven't understood?
+I am basing myself on a fairly simple non-realtime driver for the usb 
+device, that uses libusb and works just fine! And of course, I also 
+based my code on the ping demo.
+Could it be that zero packets are needed for my usb device(a shot in the 
+dark)? Though I do no see any mention to zero packets in the original 
+non-rt driver.
+
+Help would be extremely appreciated. Thank a lot!
+
+regards
+
+-jerome
+
+Below, I've copied the output of dmesg for a single write operation 
+(URB:OUT) and a single read operation (URB:OUT--&gt;URB:IN)
+
+**********************************************************************************************
+operation: (1) configuration of the device and (2) single write 
+operation consisting of sending an URB OUT to endpoint 1:
+transfer_buffer_size = 64 bytes
+status: configuration is successful (i.e. to endpoint 0) but write 
+operation only works the first time. Subsequent calls do not behave as 
+expected and no errors can be found in dmesg. &quot;64 / 64 Byte sent&quot; is 
+confirmed.
+**********************************************************************************************
+de5280c0: TD[1] completed in 129174 ns @ 1158777861309044407 ns
+[17182742.044000] 001:00-001: URB 0xde5280c0: TD[2] completed in 9739 ns 
+@ 1158777861309054146 ns
+[17182742.044000] 001:00-001: URB 0xde5280c0: Complete Wait-Time: 163135 ns
+[17182742.044000] 001:00-001: URB 0xde5280c0: PURB_IN_HANDLE
+[17182742.044000] 001:00-001: URB 0xde5280c0: ---UNSCHEDULE from 
+Full-Speed-List ---
+[17182742.044000] 001:00-001: URB 0xde5280c0: Remove from QH-List
+[17182742.044000] 001:00-001: URB 0xde5280c0: 2 / 2 Byte received
+[17182742.044000] 001:00-001: URB 0xde5280c0: Unmap Transfer-Buffer @ 
+0xc6e1fce0 (2 Byte) from DMA: 0x06e1fce0
+[17182742.044000] 001:00-001: URB 0xde5280c0: Unmap Setup-Packet @ 
+0xd7487780 (8 Byte) from DMA: 0x17487780
+[17182742.044000] 001:00-001: URB 0xde5280c0: Free TDs
+[17182742.044000] 001:00-001: URB 0xde5280c0: PURB_IDLE
+[17182742.044000] 001:00-001: Get String-Deskriptor 0x01 (26 Byte)
+[17182742.044000] URB Type: CTRL, Address: 1, Pipe: IN, Endpoint 0
+[17182742.044000] 001:00-001: URB 0xde5280c0: Setup-Packet 0xd7487780, 
+NOT_DMA_MAPPED
+[17182742.044000] 001:00-001: URB 0xde5280c0: Max Packet-Size 64
+[17182742.044000] 001:00-001: URB 0xde5280c0: Max Transfer-Buffer-Length 512
+[17182742.044000] 001:00-001: URB 0xde5280c0: Transfer-Buffer-Length 25
+[17182742.044000] 001:00-001: URB 0xde5280c0: Transfer-Buffer 
+0xc6e1fce0, NOT_DMA_MAPPED
+[17182742.044000] 001:00-001: URB 0xde5280c0: Blocking URB (Busy Wait)
+[17182742.044000] 001:00-001: URB 0xde5280c0: Setup-Packet @ 0xd7487780 
+(8 Byte) mapped to DMA: 0x17487780 [OUT]
+[17182742.044000] 001:00-001: URB 0xde5280c0: Transfer-Buffer @ 
+0xc6e1fce0 (25 Byte) mapped to DMA: 0x06e1fce0 [IN]
+[17182742.044000] 001:00-001: URB 0xde5280c0: BUSY WAIT
+[17182742.044000] 001:00-001: URB 0xde5280c0: PURB_IN_PROGRESS
+[17182742.044000] 001:00-001: URB 0xde5280c0: Add to QH-List
+[17182742.044000] 001:00-001: URB 0xde5280c0: ---SCHEDULE in 
+Full-Speed-List ---
+[17182742.044000] 001:00-001: URB 0xde5280c0: TD[0] completed in 17357 
+ns @ 1158777861309166339 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: TD[1] completed in 581574 
+ns @ 1158777861309747913 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: TD[2] completed in 22068 
+ns @ 1158777861309769981 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: Complete Wait-Time: 626787 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: PURB_IN_HANDLE
+[17182742.048000] 001:00-001: URB 0xde5280c0: ---UNSCHEDULE from 
+Full-Speed-List ---
+[17182742.048000] 001:00-001: URB 0xde5280c0: Remove from QH-List
+[17182742.048000] 001:00-001: URB 0xde5280c0: 25 / 25 Byte received
+[17182742.048000] 001:00-001: URB 0xde5280c0: Unmap Transfer-Buffer @ 
+0xc6e1fce0 (25 Byte) from DMA: 0x06e1fce0
+[17182742.048000] 001:00-001: URB 0xde5280c0: Unmap Setup-Packet @ 
+0xd7487780 (8 Byte) from DMA: 0x17487780
+[17182742.048000] 001:00-001: URB 0xde5280c0: Free TDs
+[17182742.048000] 001:00-001: URB 0xde5280c0: PURB_IDLE
+[17182742.048000] 001:00-001: Manufacturer : NOVA Eng,inc
+[17182742.048000] URB Type: CTRL, Address: 1, Pipe: IN, Endpoint 0
+[17182742.048000] 001:00-001: URB 0xde5280c0: Setup-Packet 0xd7487780, 
+NOT_DMA_MAPPED
+[17182742.048000] 001:00-001: URB 0xde5280c0: Max Packet-Size 64
+[17182742.048000] 001:00-001: URB 0xde5280c0: Max Transfer-Buffer-Length 512
+[17182742.048000] 001:00-001: URB 0xde5280c0: Transfer-Buffer-Length 2
+[17182742.048000] 001:00-001: URB 0xde5280c0: Transfer-Buffer 
+0xc6e1fce0, NOT_DMA_MAPPED
+[17182742.048000] 001:00-001: URB 0xde5280c0: Blocking URB (Busy Wait)
+[17182742.048000] 001:00-001: URB 0xde5280c0: Setup-Packet @ 0xd7487780 
+(8 Byte) mapped to DMA: 0x17487780 [OUT]
+[17182742.048000] 001:00-001: URB 0xde5280c0: Transfer-Buffer @ 
+0xc6e1fce0 (2 Byte) mapped to DMA: 0x06e1fce0 [IN]
+[17182742.048000] 001:00-001: URB 0xde5280c0: BUSY WAIT
+[17182742.048000] 001:00-001: URB 0xde5280c0: PURB_IN_PROGRESS
+[17182742.048000] 001:00-001: URB 0xde5280c0: Add to QH-List
+[17182742.048000] 001:00-001: URB 0xde5280c0: ---SCHEDULE in 
+Full-Speed-List ---
+[17182742.048000] 001:00-001: URB 0xde5280c0: TD[0] completed in 17285 
+ns @ 1158777861309881712 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: TD[1] completed in 146587 
+ns @ 1158777861310028299 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: TD[2] completed in 21736 
+ns @ 1158777861310050035 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: Complete Wait-Time: 191382 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: PURB_IN_HANDLE
+[17182742.048000] 001:00-001: URB 0xde5280c0: ---UNSCHEDULE from 
+Full-Speed-List ---
+[17182742.048000] 001:00-001: URB 0xde5280c0: Remove from QH-List
+[17182742.048000] 001:00-001: URB 0xde5280c0: 2 / 2 Byte received
+[17182742.048000] 001:00-001: URB 0xde5280c0: Unmap Transfer-Buffer @ 
+0xc6e1fce0 (2 Byte) from DMA: 0x06e1fce0
+[17182742.048000] 001:00-001: URB 0xde5280c0: Unmap Setup-Packet @ 
+0xd7487780 (8 Byte) from DMA: 0x17487780
+[17182742.048000] 001:00-001: URB 0xde5280c0: Free TDs
+[17182742.048000] 001:00-001: URB 0xde5280c0: PURB_IDLE
+[17182742.048000] 001:00-001: Get String-Deskriptor 0x02 (28 Byte)
+[17182742.048000] URB Type: CTRL, Address: 1, Pipe: IN, Endpoint 0
+[17182742.048000] 001:00-001: URB 0xde5280c0: Setup-Packet 0xd7487780, 
+NOT_DMA_MAPPED
+[17182742.048000] 001:00-001: URB 0xde5280c0: Max Packet-Size 64
+[17182742.048000] 001:00-001: URB 0xde5280c0: Max Transfer-Buffer-Length 512
+[17182742.048000] 001:00-001: URB 0xde5280c0: Transfer-Buffer-Length 27
+[17182742.048000] 001:00-001: URB 0xde5280c0: Transfer-Buffer 
+0xc6e1fce0, NOT_DMA_MAPPED
+[17182742.048000] 001:00-001: URB 0xde5280c0: Blocking URB (Busy Wait)
+[17182742.048000] 001:00-001: URB 0xde5280c0: Setup-Packet @ 0xd7487780 
+(8 Byte) mapped to DMA: 0x17487780 [OUT]
+[17182742.048000] 001:00-001: URB 0xde5280c0: Transfer-Buffer @ 
+0xc6e1fce0 (27 Byte) mapped to DMA: 0x06e1fce0 [IN]
+[17182742.048000] 001:00-001: URB 0xde5280c0: BUSY WAIT
+[17182742.048000] 001:00-001: URB 0xde5280c0: PURB_IN_PROGRESS
+[17182742.048000] 001:00-001: URB 0xde5280c0: Add to QH-List
+[17182742.048000] 001:00-001: URB 0xde5280c0: ---SCHEDULE in 
+Full-Speed-List ---
+[17182742.048000] 001:00-001: URB 0xde5280c0: TD[0] completed in 18912 
+ns @ 1158777861310163502 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: TD[1] completed in 639351 
+ns @ 1158777861310802853 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: TD[2] completed in 9579 ns 
+@ 1158777861310812432 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: Complete Wait-Time: 673560 ns
+[17182742.048000] 001:00-001: URB 0xde5280c0: PURB_IN_HANDLE
+[17182742.048000] 001:00-001: URB 0xde5280c0: ---UNSCHEDULE from 
+Full-Speed-List ---
+[17182742.048000] 001:00-001: URB 0xde5280c0: Remove from QH-List
+[17182742.048000] 001:00-001: URB 0xde5280c0: 27 / 27 Byte received
+[17182742.048000] 001:00-001: URB 0xde5280c0: Unmap Transfer-Buffer @ 
+0xc6e1fce0 (27 Byte) from DMA: 0x06e1fce0
+[17182742.048000] 001:00-001: URB 0xde5280c0: Unmap Setup-Packet @ 
+0xd7487780 (8 Byte) from DMA: 0x17487780
+[17182742.048000] 001:00-001: URB 0xde5280c0: Free TDs
+[17182742.048000] 001:00-001: URB 0xde5280c0: PURB_IDLE
+[17182742.048000] 001:00-001: Product : Constellation
+[17182742.048000] 001: URB 0xde5280c0 unregistered
+[17182742.048000] 001:00-001: UNLOCK USB-Device
+[17182742.048000] 001:00-001: Device 1 configured
+[17182742.048000] --- DUMP USB-DEVICE @ e0b3a880 -------------------------
+[17182742.048000]  Number          : 1   
+[17182742.048000]  Vendor          : 0x08bf
+[17182742.048000]  Product         : 0x0000
+[17182742.048000]  Root-Hub-Port   : 0x00
+[17182742.048000]  Class           : 0xff
+[17182742.048000]  Subclass        : 0x00
+[17182742.048000]  Protocol        : 0x00
+[17182742.048000]  In use          : no   
+[17182742.048000]  Status          : 0x00
+[17182742.048000]  Speed           : 0x02
+[17182742.048000]  Host-Controller @ 0xdb8697a0 
+[17182742.048000] 
+[17182742.048000]  Endpoint         ---0 ---1 ---2 ---3 ---4 ---5 ---6 
+---7 ---8 ---9 --10 --11 --12 --13 --14 --15
+[17182742.048000]  Ctrl-Mask IN        X    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17182742.048000]  Ctrl-Mask OUT       X    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17182742.048000]  Bulk-Mask IN        -    X    X    X    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17182742.048000]  Bulk-Mask OUT       -    X    X    X    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17182742.048000]  Int-Mask IN         -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17182742.048000]  Int-Mask OUT        -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17182742.048000]  Iso-Mask IN         -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17182742.048000]  Iso-Mask OUT        -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17182742.048000]  Toggle-Mask IN      -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17182742.048000]  Toggle-Mask OUT     -    -    -    -    -    -    
+-    -    -    -    -    -    -    -    -    -
+[17182742.048000]  Max-Packet IN    0064 0064 0064 0064 0000 0000 0000 
+0000 0000 0000 0000 0000 0000 0000 0000 0000
+[17182742.048000]  Max-Packet OUT   0064 0064 0064 0064 0000 0000 0000 
+0000 0000 0000 0000 0000 0000 0000 0000 0000
+[17182742.048000] --- END USB-DEVICE --------------------------
+[17182742.048000] --- LIST USB-DEVICES -------------------------
+[17182742.048000]  No HCD VENDOR   PROD  CLS SCLS PROT -&gt;CTRL CTRL-&gt; 
+-&gt;BULK BULK-&gt;  -&gt;INT  INT-&gt; -&gt;ISOC ISOC-&gt; STATE SPEED USED
+[17182742.048000] 001 001 0x08bf 0x0000 0xff 0x00 0x00 0x0001 0x0001 
+0x000e 0x000e 0x0000 0x0000 0x0000 0x0000 00000 00002    -
+[17182742.048000] --- END USB-DEVICES --------------------------
+[17182742.048000] 001:00: Device found ... -&gt; No HUB
+[17182742.048000] 001:00: Root-Hub portscan complete
+[17182742.048000] 001:01: Root-Hub portscan start
+[17182742.048000] 001:01: No Device found
+[17182742.048000] USB Universal Host Controller found : Vendor = 0x8086, 
+Device = 0x24c7, IRQ = 11, IO-Port = 0x0000bf20 (32 Bytes)
+[17182742.048000] RT-UHC-Driver: Request IO-Port @ 0x0000bf20 (32 Byte) 
+for UHC[2] ... [OK]
+[17182742.048000] searching IRQ 11 in the IRQ-Table
+[17182742.048000] uhc_irq_tab[0].irq = 11
+[17182742.048000] Entry found, p_uhc_irq[0] @ 0xe0865840,
+[17182742.048000] RT-UHC-Driver: RTDM IRQ 11 registered yet, add UHC to 
+IRQ-List
+[17182742.048000] RT-UHC-Driver: Framelist    @ 0xc5b10000, DMA: 
+0x05b10000 (8196 Byte)
+[17182742.048000] RT-UHC-Driver: Skeleton initialized
+[17182742.048000] RT-UHC-Driver: Setting bus-master
+[17182742.048000] RT-UHC-Driver: Write framellist 0x05b10000
+[17182742.048000] RT-UHC-Driver: Setting framenumber to 0
+[17182742.048000] RT-UHC-Driver: Setting max-packet-size to 64
+[17182742.048000] RT-UHC-Driver: Turn off all Interrupts 
+[17182742.048000] RT-UHC-Driver: Setting ports into suspend-mode
+[17182742.048000] RT-UHC-Driver: Starte Host Controller
+[17182742.048000] RT-UHC-Driver: Write framellist 0x05b10000
+[17182742.048000] RT-UHC-Driver: Setting framenumber to 0
+[17182742.048000] RT-UHC-Driver: Turn on all Interrupts 
+[17182742.048000] RT-USBCORE: Register Host-Controller Driver
+[17182742.048000] RT-USBCORE: Get free HCD 2. Mask: 0x00000007
+[17182742.048000] RT-USBCORE: Host-Controller added to USB-Controller-List
+[17182742.048000] 002: USB Universal Host Controller @ 0xe0865960 
+registered
+[17182742.048000] 002: Searching for USB-Devices
+[17182742.048000] 002:00: Root-Hub portscan start
+[17182742.048000] 002:00: No Device found
+[17182742.048000] 002:01: Root-Hub portscan start
+[17182742.048000] 002:01: No Device found
+[17182742.048000] RT-UHC-Driver: Loading Completed (84 Byte allocated)
+[17182742.104000] kobject sidus_rt: registering. parent: &lt;NULL&gt;, set: module
+[17182742.104000] kobject_uevent
+[17182742.104000] fill_kobj_path: path = '/module/sidus_rt'
+[17182742.104000] RT-USBCORE: Driver is searching for Device with Vendor 
+= 0x08bf, Product = 0x0000
+[17182742.104000] --- LIST USB-DEVICES -------------------------
+[17182742.104000]  No HCD VENDOR   PROD  CLS SCLS PROT -&gt;CTRL CTRL-&gt; 
+-&gt;BULK BULK-&gt;  -&gt;INT  INT-&gt; -&gt;ISOC ISOC-&gt; STATE SPEED USED
+[17182742.104000] 001 001 0x08bf 0x0000 0xff 0x00 0x00 0x0001 0x0001 
+0x000e 0x000e 0x0000 0x0000 0x0000 0x0000 00000 00002    X
+[17182742.104000] --- END USB-DEVICES --------------------------
+[17182742.104000] RT-USBCORE: USB-Device[1] LOCKED
+[17182742.104000] SIDUS-RT: vendor = 0x08bf, product = 0x0000 found ...
+[17182742.104000] SIDUS-RT: USB-Device @ 0xe0b3a880
+[17182742.104000] SIDUS-RT: Host-Controller @ 0xdb8697a0
+[17182742.104000] 001: URB @ 0xdfdc67c0 registered, 3 TDs, Max-Buffer: 
+64, Max-Packet-Size: 64
+[17182742.104000] 001: URB @ 0xdfdc68c0 registered, 3 TDs, Max-Buffer: 
+64, Max-Packet-Size: 64
+[17182742.104000] URB Type: BULK, Address: 1, Pipe: OUT, Endpoint 1
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Max Packet-Size 64
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Max Transfer-Buffer-Length 64
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Transfer-Buffer-Length 64
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Transfer-Buffer 
+0xcb508a40, NOT_DMA_MAPPED
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Blocking URB (Semaphore)
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Transfer-Buffer @ 
+0xcb508a40 (64 Byte) mapped to DMA: 0x0b508a40 [OUT]
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: SLEEPING MAX 500000000 ns
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: PURB_IN_PROGRESS
+[17182742.104000] Sending 64 Bytes: [0]: 0x03, [1]: 0x40
+[17182742.104000] ========== DUMP TD-TABLE @ 0xc6e1d000 (3 TDs, 144 
+Byte) ===========
+[17182742.104000]    URB         @ 0xdfdc67c0
+[17182742.104000]    PRIVATE-URB @ 0xdec5e640
+[17182742.104000]    QH          @ 0xc6fcf000 , DMA: 0x06fcf000
+[17182742.104000] A    NR         TD        LINK      STATUS       
+TOKEN      BUFFER  ACT ACTLEN MAXLEN TYPE ERRCNT STALL DBUF BABL TIME 
+BITST SPD IOC NAK DT ADR EP LS
+[17182742.104000] *     0 0x06e1d000  0x00000001  0x21800000  
+0x07e081e1  0x0b508a40    X      0     63   e1      0     -    -    -    
+-     -   X   X   -  0   1  1  -
+[17182742.104000] ========== END DUMP =========
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Add to QH-List
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: ---SCHEDULE in 
+Full-Speed-List ---
+[17182742.104000] SIDUS_RT: started, 380 Byte allocated
+[17182742.104000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17182742.104000] UHC @ 0xe08658e0: Checking for Interrupts
+[17182742.104000] UHC[0]: No state-bit set
+[17182742.104000] UHC @ 0xe0865920: Checking for Interrupts
+[17182742.104000] UHC[1]: Handling
+[17182742.104000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: COMPLETED
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: HANDLING
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Wake up Driver
+[17182742.104000] UHC @ 0xe0865960: Checking for Interrupts
+[17182742.104000] UHC[2]: No state-bit set
+[17182742.104000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: RT_SEM waked up by ISR, 
+Sleeptime: (538413 ns)
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: PURB_IN_HANDLE
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: ---UNSCHEDULE from 
+Full-Speed-List ---
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Remove from QH-List
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: 64 / 64 Byte sent
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Unmap Transfer-Buffer @ 
+0xcb508a40 (64 Byte) from DMA: 0x0b508a40
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: Free TDs
+[17182742.104000] 001:00-001: URB 0xdfdc67c0: PURB_IDLE
+
+
+
+**********************************************************************************************
+operation: (1) send URB OUT to endpoint 1 with  device-specific read 
+instruction in transfer_buffer and (2) send URB IN to endpoint 1 and 
+collect returned data from transfer_buffer
+transfer_buffer_size for URB:OUT = 64 bytes and transfer_buffer_size for 
+URB:IN = 4 bytes
+status: URB:IN does not return anything: &quot;0 / 4 Byte received&quot;
+**********************************************************************************************
+===============
+[17183761.772000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.772000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.772000] UHC[0]: No state-bit set
+[17183761.772000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.772000] UHC[1]: Handling
+[17183761.772000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.772000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.772000] UHC[2]: No state-bit set
+[17183761.772000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.772000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.772000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.772000] UHC[0]: No state-bit set
+[17183761.772000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.772000] UHC[1]: Handling
+[17183761.772000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.772000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.772000] UHC[2]: No state-bit set
+[17183761.772000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.772000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.772000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.772000] UHC[0]: No state-bit set
+[17183761.772000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.772000] UHC[1]: Handling
+[17183761.772000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.772000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.772000] UHC[2]: No state-bit set
+[17183761.772000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.772000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.772000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.772000] UHC[0]: No state-bit set
+[17183761.772000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.772000] UHC[1]: Handling
+[17183761.772000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.772000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.772000] UHC[2]: No state-bit set
+[17183761.772000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.776000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.776000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.776000] UHC[0]: No state-bit set
+[17183761.776000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.776000] UHC[1]: Handling
+[17183761.776000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.776000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.776000] UHC[2]: No state-bit set
+[17183761.776000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.776000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.776000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.776000] UHC[0]: No state-bit set
+[17183761.776000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.776000] UHC[1]: Handling
+[17183761.776000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.776000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.776000] UHC[2]: No state-bit set
+[17183761.776000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.776000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.776000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.776000] UHC[0]: No state-bit set
+[17183761.776000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.776000] UHC[1]: Handling
+[17183761.776000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.776000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.776000] UHC[2]: No state-bit set
+[17183761.776000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.776000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.776000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.776000] UHC[0]: No state-bit set
+[17183761.776000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.776000] UHC[1]: Handling
+[17183761.776000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.776000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.776000] UHC[2]: No state-bit set
+[17183761.776000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.780000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.780000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.780000] UHC[0]: No state-bit set
+[17183761.780000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.780000] UHC[1]: Handling
+[17183761.780000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.780000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.780000] UHC[2]: No state-bit set
+[17183761.780000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.780000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.780000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.780000] UHC[0]: No state-bit set
+[17183761.780000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.780000] UHC[1]: Handling
+[17183761.780000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.780000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.780000] UHC[2]: No state-bit set
+[17183761.780000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.780000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.780000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.780000] UHC[0]: No state-bit set
+[17183761.780000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.780000] UHC[1]: Handling
+[17183761.780000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.780000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.780000] UHC[2]: No state-bit set
+[17183761.780000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.780000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.780000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.780000] UHC[0]: No state-bit set
+[17183761.780000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.780000] UHC[1]: Handling
+[17183761.780000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.780000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.780000] UHC[2]: No state-bit set
+[17183761.780000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.784000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.784000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.784000] UHC[0]: No state-bit set
+[17183761.784000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.784000] UHC[1]: Handling
+[17183761.784000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.784000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.784000] UHC[2]: No state-bit set
+[17183761.784000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.784000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.784000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.784000] UHC[0]: No state-bit set
+[17183761.784000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.784000] UHC[1]: Handling
+[17183761.784000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.784000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.784000] UHC[2]: No state-bit set
+[17183761.784000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.784000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.784000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.784000] UHC[0]: No state-bit set
+[17183761.784000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.784000] UHC[1]: Handling
+[17183761.784000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.784000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.784000] UHC[2]: No state-bit set
+[17183761.784000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.784000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.784000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.784000] UHC[0]: No state-bit set
+[17183761.784000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.784000] UHC[1]: Handling
+[17183761.784000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.784000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.784000] UHC[2]: No state-bit set
+[17183761.784000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.788000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.788000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.788000] UHC[0]: No state-bit set
+[17183761.788000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.788000] UHC[1]: Handling
+[17183761.788000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.788000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.788000] UHC[2]: No state-bit set
+[17183761.788000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.788000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.788000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.788000] UHC[0]: No state-bit set
+[17183761.788000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.788000] UHC[1]: Handling
+[17183761.788000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.788000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.788000] UHC[2]: No state-bit set
+[17183761.788000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.788000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.788000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.788000] UHC[0]: No state-bit set
+[17183761.788000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.788000] UHC[1]: Handling
+[17183761.788000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.788000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.788000] UHC[2]: No state-bit set
+[17183761.788000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.788000] 001:00-001: URB 0xde203e80: RT_SEM timed out
+[17183761.788000] 001:00-001: URB 0xde203e80: PURB_IN_HANDLE
+[17183761.788000] 001:00-001: URB 0xde203e80: ---UNSCHEDULE from 
+Full-Speed-List ---
+[17183761.788000] 001:00-001: URB 0xde203e80: Remove from QH-List
+[17183761.788000] 001:00-001: URB 0xde203e80: Short Packet (0/3 Bytes)
+[17183761.788000] 001:00-001: URB 0xde203e80: 1 / 4 Byte received
+[17183761.788000] 001:00-001: URB 0xde203e80: Unmap Transfer-Buffer @ 
+0xdf39c800 (4 Byte) from DMA: 0x1f39c800
+[17183761.788000] 001:00-001: URB 0xde203e80: Free TDs
+[17183761.788000] 001:00-001: URB 0xde203e80: PURB_IDLE
+[17183761.788000] SIDUS-RT: First Read from FPGA 0xf9
+[17183761.788000] URB Type: BULK, Address: 1, Pipe: OUT, Endpoint 1
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Max Packet-Size 64
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Max Transfer-Buffer-Length 64
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Transfer-Buffer-Length 64
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Transfer-Buffer 
+0xcb508780, NOT_DMA_MAPPED
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Blocking URB (Semaphore)
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Transfer-Buffer @ 
+0xcb508780 (64 Byte) mapped to DMA: 0x0b508780 [OUT]
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: SLEEPING MAX 500000000 ns
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: PURB_IN_PROGRESS
+[17183761.788000] Sending 64 Bytes: [0]: 0x00, [1]: 0x40
+[17183761.788000] ========== DUMP TD-TABLE @ 0xc7d4c000 (3 TDs, 144 
+Byte) ===========
+[17183761.788000]    URB         @ 0xdfdc65c0
+[17183761.788000]    PRIVATE-URB @ 0xdec5e340
+[17183761.788000]    QH          @ 0xc6239000 , DMA: 0x06239000
+[17183761.788000] A    NR         TD        LINK      STATUS       
+TOKEN      BUFFER  ACT ACTLEN MAXLEN TYPE ERRCNT STALL DBUF BABL TIME 
+BITST SPD IOC NAK DT ADR EP LS
+[17183761.788000] *     0 0x07d4c000  0x00000001  0x21800000  
+0x07e081e1  0x0b508780    X      0     63   e1      0     -    -    -    
+-     -   X   X   -  0   1  1  -
+[17183761.788000] ========== END DUMP =========
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Add to QH-List
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: ---SCHEDULE in 
+Full-Speed-List ---
+[17183761.788000]  =================== BEGIN RTAI-INTERRUPT HANDLER 
+=============================
+[17183761.788000] UHC @ 0xe08658e0: Checking for Interrupts
+[17183761.788000] UHC[0]: No state-bit set
+[17183761.788000] UHC @ 0xe0865920: Checking for Interrupts
+[17183761.788000] UHC[1]: Handling
+[17183761.788000] 001: ===&gt; Incoming IRQ 11, COMPLETE
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: COMPLETED
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: HANDLING
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Wake up Driver
+[17183761.788000] UHC @ 0xe0865960: Checking for Interrupts
+[17183761.788000] UHC[2]: No state-bit set
+[17183761.788000]  =================== ENDE RTAI-INTERRUPT HANDLER 
+==============================
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: RT_SEM waked up by ISR, 
+Sleeptime: (821626 ns)
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: PURB_IN_HANDLE
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: ---UNSCHEDULE from 
+Full-Speed-List ---
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Remove from QH-List
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: 64 / 64 Byte sent
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Unmap Transfer-Buffer @ 
+0xcb508780 (64 Byte) from DMA: 0x0b508780
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: Free TDs
+[17183761.788000] 001:00-001: URB 0xdfdc65c0: PURB_IDLE
+[17183761.788000] URB Type: BULK, Address: 1, Pipe: IN, Endpoint 1
+[17183761.788000] 001:00-001: URB 0xde203e80: Max Packet-Size 64
+[17183761.788000] 001:00-001: URB 0xde203e80: Max Transfer-Buffer-Length 64
+[17183761.788000] 001:00-001: URB 0xde203e80: Transfer-Buffer-Length 4
+[17183761.788000] 001:00-001: URB 0xde203e80: Transfer-Buffer 
+0xdf39c800, NOT_DMA_MAPPED
+[17183761.788000] 001:00-001: URB 0xde203e80: Blocking URB (Semaphore)
+[17183761.788000] 001:00-001: URB 0xde203e80: Transfer-Buffer @ 
+0xdf39c800 (4 Byte) mapped to DMA: 0x1f39c800 [IN]
+[17183761.788000] 001:00-001: URB 0xde203e80: SLEEPING MAX 500000000 ns
+[17183761.788000] 001:00-001: URB 0xde203e80: PURB_IN_PROGRESS
+[17183761.788000] 001:00-001: URB 0xde203e80: Add to QH-List
+[17183761.788000] 001:00-001: URB 0xde203e80: ---SCHEDULE in 
+Full-Speed-List ---
+[17183762.292000] 001:00-001: URB 0xde203e80: RT_SEM timed out
+[17183762.292000] 001:00-001: URB 0xde203e80: PURB_IN_HANDLE
+[17183762.292000] 001:00-001: URB 0xde203e80: ---UNSCHEDULE from 
+Full-Speed-List ---
+[17183762.292000] 001:00-001: URB 0xde203e80: Remove from QH-List
+[17183762.292000] 001:00-001: URB 0xde203e80: 0 / 4 Byte received
+[17183762.292000] 001:00-001: URB 0xde203e80: Unmap Transfer-Buffer @ 
+0xdf39c800 (4 Byte) from DMA: 0x1f39c800
+[17183762.292000] 001:00-001: URB 0xde203e80: Free TDs
+[17183762.292000] 001:00-001: URB 0xde203e80: PURB_IDLE
+[17183762.292000] SIDUS-RT: [ERROR] ReadBlock: Expecting 1 byte / 
+Received 0 bytes
+[17183762.292000] SIDUS-RT: Second Read from FPGA 0xe0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- 
+No virus found in this outgoing message.
+Checked by AVG Free Edition.
+Version: 7.1.405 / Virus Database: 268.12.5/450 - Release Date: 9/18/2006
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000052.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+	<LI>Next message: <A HREF="000056.html">[Usb4rt-users] problem with URB's transfer_buffer_length?
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#55">[ date ]</a>
+              <a href="thread.html#55">[ thread ]</a>
+              <a href="subject.html#55">[ subject ]</a>
+              <a href="author.html#55">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

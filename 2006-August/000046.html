@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB configuration with alternate interface
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2006-August/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%20configuration%20with%20alternate%20interface&In-Reply-To=%3C44EAB880.1000805%40web.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000045.html">
+   <LINK REL="Next"  HREF="000047.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB configuration with alternate interface</H1>
+    <B>Jan Kiszka</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB%20configuration%20with%20alternate%20interface&In-Reply-To=%3C44EAB880.1000805%40web.de%3E"
+       TITLE="[Usb4rt-users] USB configuration with alternate interface">jan.kiszka at web.de
+       </A><BR>
+    <I>Tue Aug 22 09:55:44 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000045.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+        <LI>Next message: <A HREF="000047.html">[Usb4rt-users] Secure E-mail System
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#46">[ date ]</a>
+              <a href="thread.html#46">[ thread ]</a>
+              <a href="subject.html#46">[ subject ]</a>
+              <a href="author.html#46">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Cedric Herreman wrote:
+&gt;<i> Jan,
+</I>&gt;<i> 
+</I>&gt;<i> See attachment.
+</I>
+Thanks, applied with minor refactorings.
+
+Jan
+
+&gt;<i> 
+</I>&gt;<i> Rgds,
+</I>&gt;<i> 
+</I>&gt;<i> Cedric.
+</I>&gt;<i> 
+</I>&gt;<i> ----- Original Message ----
+</I>&gt;<i> From: Jan Kiszka &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">jan.kiszka at web.de</A>&gt;
+</I>&gt;<i> To: usb4rt &lt;<A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">usb4rt-users at lists.berlios.de</A>&gt;
+</I>&gt;<i> Sent: Monday, August 21, 2006 7:19:24 PM
+</I>&gt;<i> Subject: Re: [Usb4rt-users] USB configuration with alternate interface
+</I>&gt;<i> 
+</I>&gt;<i> Cedric Herreman wrote:
+</I>&gt;&gt;<i> OK,
+</I>&gt;&gt;<i>
+</I>&gt;&gt;<i> I could fix it myself. (Isn't open source beautiful ?) I pasted the source code that i (slightly) modified below for information. It's to do with the 'alternate' variable. It holds whether an interface is alternate or not. If so, endpoints are discarded.
+</I>&gt;&gt;<i>
+</I>&gt;<i> 
+</I>&gt;<i> Sound good to me for most use-cases. Once we refactor the API over RTDM,
+</I>&gt;<i> we could reconsider this and add real support for alternate settings (if
+</I>&gt;<i> there is a real need). Maybe Joerg is listening and can comment on it as
+</I>&gt;<i> well.
+</I>&gt;<i> 
+</I>&gt;<i> But could you post a &quot;diff -up file.orig file&quot; instead of the full file?
+</I>&gt;<i> Makes it easier to read and to apply to SVN.
+</I>&gt;<i> 
+</I>&gt;<i> Thanks,
+</I>&gt;<i> Jan
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> _______________________________________________
+</I>&gt;<i> Usb4rt-users mailing list
+</I>&gt;<i> <A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">Usb4rt-users at lists.berlios.de</A>
+</I>&gt;<i> <A HREF="https://lists.berlios.de/mailman/listinfo/usb4rt-users">https://lists.berlios.de/mailman/listinfo/usb4rt-users</A>
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> 
+</I>&gt;<i> ------------------------------------------------------------------------
+</I>&gt;<i> 
+</I>&gt;<i> --- rt_usb_core_orig.c	2006-08-22 09:05:40.214290624 +0200
+</I>&gt;<i> +++ rt_usb_core.c	2006-08-22 09:09:31.235170112 +0200
+</I>&gt;<i> @@ -601,6 +601,7 @@ void usb_check_device(struct usb_device 
+</I>&gt;<i>  */
+</I>&gt;<i>  
+</I>&gt;<i>      int bytes;
+</I>&gt;<i> +    int alternate;
+</I>&gt;<i>      void *buffer;
+</I>&gt;<i>      __u16 epa;
+</I>&gt;<i>      __u8 out;
+</I>&gt;<i> @@ -617,6 +618,7 @@ void usb_check_device(struct usb_device 
+</I>&gt;<i>      }
+</I>&gt;<i>  
+</I>&gt;<i>      bytes = p_desc-&gt;wTotalLength;
+</I>&gt;<i> +    alternate = 0;
+</I>&gt;<i>      buffer = (void *)(p_desc);  // first Interface
+</I>&gt;<i>  
+</I>&gt;<i>      while (bytes &gt; 0)
+</I>&gt;<i> @@ -639,6 +641,7 @@ void usb_check_device(struct usb_device 
+</I>&gt;<i>              p_ifd = (struct usb_interface_descriptor *)buffer;
+</I>&gt;<i>              buffer += p_ifd-&gt;bLength;
+</I>&gt;<i>              bytes -= p_ifd-&gt;bLength;
+</I>&gt;<i> +	    alternate = p_ifd-&gt;bAlternateSetting;
+</I>&gt;<i>              //dump_interface_descriptor(addr, p_ifd);
+</I>&gt;<i>              break;
+</I>&gt;<i>          }
+</I>&gt;<i> @@ -651,6 +654,8 @@ void usb_check_device(struct usb_device 
+</I>&gt;<i>              buffer += p_epd-&gt;bLength;
+</I>&gt;<i>              bytes -= p_epd-&gt;bLength;
+</I>&gt;<i>              //dump_endpoint_descriptor(addr, p_epd);
+</I>&gt;<i> +	    if (alternate) break; //discard endpoints in alternate interface
+</I>&gt;<i> +	    
+</I>&gt;<i>              if (out)
+</I>&gt;<i>                  p_usbdev-&gt;epmaxpacketout[epa] = le16_to_cpu(p_epd-&gt;wMaxPacketSize);
+</I>&gt;<i>              else
+</I>
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: signature.asc
+Type: application/pgp-signature
+Size: 250 bytes
+Desc: OpenPGP digital signature
+URL: &lt;<A HREF="https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060822/5f5a880d/attachment.pgp">https://lists.berlios.de/pipermail/usb4rt-users/attachments/20060822/5f5a880d/attachment.pgp</A>&gt;
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000045.html">[Usb4rt-users] USB configuration with alternate interface
+</A></li>
+	<LI>Next message: <A HREF="000047.html">[Usb4rt-users] Secure E-mail System
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#46">[ date ]</a>
+              <a href="thread.html#46">[ thread ]</a>
+              <a href="subject.html#46">[ subject ]</a>
+              <a href="author.html#46">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>

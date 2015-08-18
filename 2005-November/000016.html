@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Usb4rt-users] USB4RT and PCI
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/usb4rt-users/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB4RT%20and%20PCI&In-Reply-To=%3C20051107153906.73645.qmail%40web32709.mail.mud.yahoo.com%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000015.html">
+   <LINK REL="Next"  HREF="000017.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Usb4rt-users] USB4RT and PCI</H1>
+    <B>Cedric Herreman</B> 
+    <A HREF="mailto:usb4rt-users%40lists.berlios.de?Subject=Re%3A%20%5BUsb4rt-users%5D%20USB4RT%20and%20PCI&In-Reply-To=%3C20051107153906.73645.qmail%40web32709.mail.mud.yahoo.com%3E"
+       TITLE="[Usb4rt-users] USB4RT and PCI">glocker50 at yahoo.com
+       </A><BR>
+    <I>Mon Nov  7 16:39:06 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000015.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+        <LI>Next message: <A HREF="000017.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#16">[ date ]</a>
+              <a href="thread.html#16">[ thread ]</a>
+              <a href="subject.html#16">[ subject ]</a>
+              <a href="author.html#16">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Thanks for the suggestion. This BIOS version does not
+allow me to disable the Ethernet ports on the board. I
+experimented with some settings but had no improvement
+for the moment.
+
+I tried loading the user space drivers. This works,
+dmesg shows me the vendor ID and product ID of the
+only attached device. I do not have this Host System
+Error with the user space drivers. 
+
+An IRQ conflict would give me problems in user space
+also, i suppose ?
+
+&gt;<i> Cedric Herreman wrote:
+</I>&gt;<i> &gt; Hi.
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; I managed to compile &amp; install xenomai 2.0 and
+</I>&gt;<i> usb4rt
+</I>&gt;<i> &gt; on a target system. But I cannot usb-ping a
+</I>&gt;<i> device. I
+</I>&gt;<i> &gt; checked the usb_dev list : it is empty.
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; I found that the host controller(s) enter(s) the
+</I>&gt;<i> error
+</I>&gt;<i> &gt; state : &quot;Host System Error&quot;. The UHCI-spec states
+</I>&gt;<i> that
+</I>&gt;<i> &gt; this can be caused by PCI communication problems.
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; I have noticed that after using the rt4usb
+</I>&gt;<i> modules, my
+</I>&gt;<i> &gt; network is not working correctly anymore. I have
+</I>&gt;<i> to
+</I>&gt;<i> &gt; &quot;/sbin/ifdown eth0&quot; and &quot;/sbin/ifup eth0&quot; to get
+</I>&gt;<i> it
+</I>&gt;<i> &gt; working again.
+</I>&gt;<i> &gt; 
+</I>&gt;<i> &gt; Both Ethernet controllers and USB controllers are
+</I>&gt;<i> on
+</I>&gt;<i> &gt; the PCI bus : can this be the cause of problems ? 
+</I>&gt;<i> 
+</I>&gt;<i> I would rather guess: IRQ conflict. Please check
+</I>&gt;<i> first if the USB and
+</I>&gt;<i> the Ethernet controllers are sharing the same IRQ.
+</I>&gt;<i> Try to avoid this,
+</I>&gt;<i> e.g. by plugging the NIC in some other PCI slot - as
+</I>&gt;<i> long as it's not
+</I>&gt;<i> on-board. In the latter case, try playing with the
+</I>&gt;<i> BIOS, maybe even
+</I>&gt;<i> disable the NIC for a simple test.
+</I>&gt;<i> 
+</I>&gt;<i> Jan
+</I>&gt;<i> 
+</I>
+
+
+		
+__________________________________ 
+Yahoo! FareChase: Search multiple travel sites in one click.
+<A HREF="http://farechase.yahoo.com">http://farechase.yahoo.com</A>
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000015.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+	<LI>Next message: <A HREF="000017.html">[Usb4rt-users] USB4RT and PCI
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#16">[ date ]</a>
+              <a href="thread.html#16">[ thread ]</a>
+              <a href="subject.html#16">[ subject ]</a>
+              <a href="author.html#16">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/usb4rt-users">More information about the Usb4rt-users
+mailing list</a><br>
+</body></html>
